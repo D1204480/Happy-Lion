@@ -1,4 +1,5 @@
 <template>
+
   <div class="card text-start">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
@@ -57,12 +58,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="restaurant in restaurants" v-bind:key="restaurant.restaurantId">
-                <td>{{ restaurant.restaurantId }}</td>
-                <td>{{ restaurant.firstName }}</td>
-                <td>{{ restaurant.lastName }}</td>
-                <td>{{ restaurant.birthday }}</td>
-                <td>{{ restaurant.email }}</td>
+              <tr v-for="restaurant in restaurants" v-bind:key="restaurant.restId">
+                <td>{{ restaurant.restId }}</td>
+                <td>{{ restaurant.name }}</td>
+                <td>{{ restaurant.tel }}</td>
+                <td>{{ restaurant.zipcode }}</td>
                 <td>{{ restaurant.address }}</td>
               </tr>
             </tbody>
@@ -72,14 +72,16 @@
           <table class="table table-hover" v-if="activeTab === 'menu'">
             <thead>
               <tr>
-                <th scope="col">菜品名稱</th>
+                <th scope="col">菜單編號</th>
+                <th scope="col">品項</th>
                 <th scope="col">價格</th>
                 <th scope="col">描述</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="item in menuItems" v-bind:key="item.id">
-                <td>{{ item.name }}</td>
+                <td>{{ item.id }}</td>
+                <td>{{ item.item }}</td>
                 <td>{{ item.price }}</td>
                 <td>{{ item.description }}</td>
               </tr>
@@ -91,17 +93,25 @@
             <thead>
               <tr>
                 <th scope="col">訂單編號</th>
-                <th scope="col">顧客名稱</th>
                 <th scope="col">訂單日期</th>
-                <th scope="col">狀態</th>
+                <th scope="col">顧客名稱</th>
+                <th scope="col">餐廳名稱</th>
+                <th scope="col">餐點</th>
+                <th scope="col">單價</th>
+                <th scope="col">數量</th>
+                <th scope="col">總金額</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="order in orders" v-bind:key="order.id">
-                <td>{{ order.id }}</td>
+              <tr v-for="order in orders" v-bind:key="order.orderId">
+                <td>{{ order.orderId }}</td>
+                <td>{{ order.orderDate }}</td>
                 <td>{{ order.customerName }}</td>
-                <td>{{ order.date }}</td>
-                <td>{{ order.status }}</td>
+                <td>{{ order.restaurantName }}</td>
+                <td>{{ order.menuItem }}</td>
+                <td>{{ order.menuPrice }}</td>
+                <td>{{ order.quantity }}</td>
+                <td>{{ order.totalPrice }}</td>
               </tr>
             </tbody>
           </table>
@@ -113,8 +123,87 @@
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleterestaurantModal"
           v-on:click="onSelectrestaurant(selectedRestaurant)">Delete</button>
       </div>
+
+      <!-- Delete Student Modal -->
+      <!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this item?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                v-on:click="deleteStudent">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div> -->
+
+      <!-- Edit Student Modal -->
+      <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3 row">
+                <label for="editFirstName" class="col-sm-3 col-form-label">First Name</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="editFirstName" v-model="editStudent.firstName"
+                    aria-label="First name">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="editLastName" class="col-sm-3 col-form-label">Last Name</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="editLastName" v-model="editStudent.lastName"
+                    aria-label="First name">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="editBirthday" class="col-sm-3 col-form-label">Birthday</label>
+                <div class="col-sm-9">
+                  <input type="date" class="form-control" id="editBirthday" v-model="editStudent.birthday"
+                    aria-label="First name">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="editEmail" class="col-sm-3 col-form-label">Email</label>
+                <div class="col-sm-9">
+                  <input type="email" class="form-control" id="editEmail" v-model="editStudent.email"
+                    aria-label="First name">
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="editAddress" class="col-sm-3 col-form-label">Address</label>
+                <div class="col-sm-9">
+                  <input type="text" class="form-control" id="editAddress" v-model="editStudent.address"
+                    aria-label="First name">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+                  v-on:click="updateStudent">Update</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> -->
     </div>
   </div>
+
+
+
 </template>
 
 <script>

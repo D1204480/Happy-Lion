@@ -19,7 +19,8 @@ public class OrderInfoWithCustomer {
     private String restaurantName;
     private String menuItem;
     private int menuPrice;
-
+    private int quantity;
+    private int totalPrice;
 
 
 }

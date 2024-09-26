@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order-info-with-customer")
+@RequestMapping("/api/order-info-wc")
 public class OrderInfoWithCustomerController {
 
     @Autowired
@@ -19,12 +19,20 @@ public class OrderInfoWithCustomerController {
         return orderInfoWithCustomerService.getAllOrderInfoWithCutomer();
     }
 
-    @GetMapping("/{id}")
-    public OrderInfoWithCustomer getOrderInfoWithCustomerById(@PathVariable int id) {
-        return orderInfoWithCustomerService.getOrderInfoWithCustomerById(id);
+    // search by order-id
+    @GetMapping("/{orderId}")
+    public OrderInfoWithCustomer getOrderInfoWithCustomerById(@PathVariable int orderId) {
+        return orderInfoWithCustomerService.getOrderInfoWithCustomerById(orderId);
+    }
+
+    // search by restaurant-id
+    @GetMapping("/rest/{restId}")
+    public OrderInfoWithCustomer getOrderInfoRestaurantById(@PathVariable int restId) {
+        return orderInfoWithCustomerService.getOrderInfoRestaurantById(restId);
     }
 
 
+    // search by customer's name
     @GetMapping("/name/{keyword}")
     public List<OrderInfoWithCustomer> searchOrderInfoWithCustomerByName(@PathVariable String keyword) {
         return orderInfoWithCustomerService.searchOrderInfoWithCustomerByName(keyword);
