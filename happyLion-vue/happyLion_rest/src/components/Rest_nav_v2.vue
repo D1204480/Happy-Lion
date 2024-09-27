@@ -1,5 +1,11 @@
 <template>
 
+  <div class="my-3">
+    <h3>Search Result for: "{{ searchQuery }}"</h3>
+    <!-- 這裡可以顯示或處理搜尋結果 -->
+  </div>
+
+  <!-- navbar navigation -->
   <div class="card text-start">
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
@@ -17,6 +23,8 @@
         </li>
       </ul>
     </div>
+
+    <!-- navigation 顯示區 -->
     <div class="card-body">
       <h5 class="card-title">{{ currentTitle }}</h5>
       <p class="card-text">{{ currentText }}</p>
@@ -58,12 +66,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="restaurant in restaurants" v-bind:key="restaurant.restId">
+              <tr v-for="restaurant in filteredRestaurants" v-bind:key="restaurant.restId">
                 <td>{{ restaurant.restId }}</td>
                 <td>{{ restaurant.name }}</td>
                 <td>{{ restaurant.tel }}</td>
                 <td>{{ restaurant.zipcode }}</td>
                 <td>{{ restaurant.address }}</td>
+                <td>
+                  <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
+                    @click="onUpdateRestaurant(restaurant)">
+                    Edit
+                  </button>
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                    @click="onSelectRestaurant(restaurant)">
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -79,11 +97,21 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="item in menuItems" v-bind:key="item.id">
-                <td>{{ item.id }}</td>
-                <td>{{ item.item }}</td>
-                <td>{{ item.price }}</td>
-                <td>{{ item.description }}</td>
+              <tr v-for="menu in filteredMenuItems" v-bind:key="menu.id">
+                <td>{{ menu.id }}</td>
+                <td>{{ menu.item }}</td>
+                <td>{{ menu.price }}</td>
+                <td>{{ menu.description }}</td>
+                <td>
+                  <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
+                    @click="onUpdateMenu(item)">
+                    Edit
+                  </button>
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                    @click="onSelectMenu(item)">
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -103,7 +131,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="order in orders" v-bind:key="order.orderId">
+              <tr v-for="order in filteredOrders" v-bind:key="order.orderId">
                 <td>{{ order.orderId }}</td>
                 <td>{{ order.orderDate }}</td>
                 <td>{{ order.customerName }}</td>
@@ -112,102 +140,110 @@
                 <td>{{ order.menuPrice }}</td>
                 <td>{{ order.quantity }}</td>
                 <td>{{ order.totalPrice }}</td>
+                <td>
+                  <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
+                    @click="onUpdateRestaurant(restaurant)">
+                    Edit
+                  </button>
+                  <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                    @click="onSelectRestaurant(restaurant)">
+                    Delete
+                  </button>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <div class="text-center">
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editrestaurantModal"
-          style="margin-right: 0.5em;" v-on:click="onUpdaterestaurant(selectedRestaurant)">Edit</button>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleterestaurantModal"
-          v-on:click="onSelectrestaurant(selectedRestaurant)">Delete</button>
-      </div>
 
-      <!-- Delete Student Modal -->
-      <!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Delete</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              Are you sure you want to delete this item?
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                v-on:click="deleteStudent">Delete</button>
-            </div>
-          </div>
-        </div>
+      <!-- Button trigger modal -->
+      <!-- <div class="text-center mt-3">
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
+          style="margin-right: 0.5em;" v-on:click="onUpdateRestaurant(restaurant)">Edit</button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+          v-on:click="onSelectRestaurant(restaurant)">Delete</button>
       </div> -->
 
-      <!-- Edit Student Modal -->
-      <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <div class="mb-3 row">
-                <label for="editFirstName" class="col-sm-3 col-form-label">First Name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="editFirstName" v-model="editStudent.firstName"
-                    aria-label="First name">
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="editLastName" class="col-sm-3 col-form-label">Last Name</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="editLastName" v-model="editStudent.lastName"
-                    aria-label="First name">
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="editBirthday" class="col-sm-3 col-form-label">Birthday</label>
-                <div class="col-sm-9">
-                  <input type="date" class="form-control" id="editBirthday" v-model="editStudent.birthday"
-                    aria-label="First name">
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="editEmail" class="col-sm-3 col-form-label">Email</label>
-                <div class="col-sm-9">
-                  <input type="email" class="form-control" id="editEmail" v-model="editStudent.email"
-                    aria-label="First name">
-                </div>
-              </div>
-              <div class="mb-3 row">
-                <label for="editAddress" class="col-sm-3 col-form-label">Address</label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="editAddress" v-model="editStudent.address"
-                    aria-label="First name">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                  v-on:click="updateStudent">Update</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </div>
   </div>
 
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this item?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            v-on:click="deleteRestaurant">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel">Edit</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3 row">
+            <label for="editRestName" class="col-sm-3 col-form-label">餐廳名稱</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="editRestName" v-model="editRestaurant.name"
+                aria-label="Restaurant name">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="editTel" class="col-sm-3 col-form-label">餐廳電話</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="editTel" v-model="editRestaurant.tel"
+                aria-label="Restaurant Tel">
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="editZip" class="col-sm-3 col-form-label">郵遞區號</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="editZip" v-model="editRestaurant.zipcode"
+                aria-label="Zipcode">
+            </div>
+          </div>
+
+          <div class="mb-3 row">
+            <label for="editAddress" class="col-sm-3 col-form-label">地址</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="editAddress" v-model="editRestaurant.address"
+                aria-label="Address">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
+            v-on:click="updateRestaurant">Update</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </template>
 
+
 <script>
 export default {
+  props: {
+    searchQuery: String
+  },
+
   data() {
     return {
       activeTab: 'restaurant', // 預設為餐廳基本資料
@@ -225,33 +261,165 @@ export default {
           text: '這裡是餐廳的訂單內容。'
         }
       },
-      // 假設這裡是選定的餐廳資料
-      selectedRestaurant: {
-        restaurantId: '1',
-        firstName: '餐廳A',
-        lastName: '12345678',
-        birthday: '100000',
-        address: '某地區'
-      },
+
       // 假設這裡是菜單和訂單的數據
       menuItems: [],
-      orders: []
+      orders: [],
+      restaurants: [],
+      keyword: "",
+      selectedRestaurant: {
+        restId: "",
+        name: "",
+        tel: "",
+        zipcode: "",
+        address: "",
+      },
+      newRestaurant: {
+        restId: "",
+        name: "",
+        tel: "",
+        zipcode: "",
+        address: "",
+      },
+      editRestaurant: {
+        restId: "",
+        name: "",
+        tel: "",
+        zipcode: "",
+        address: "",
+      },
     };
   },
+
   computed: {
     currentTitle() {
       return this.tabsContent[this.activeTab].title;
     },
     currentText() {
       return this.tabsContent[this.activeTab].text;
+    },
+
+    // 過濾餐廳資料
+    filteredRestaurants() {
+      if (this.searchQuery) {
+        return this.restaurants.filter(restaurant =>
+          restaurant.restId.toString().includes(this.searchQuery) ||
+          restaurant.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+        );
+      }
+      return this.restaurants;
+    },
+
+    // 過濾菜單資料
+    filteredMenuItems() {
+      if (this.searchQuery) {
+        return this.menuItems.filter(item =>
+          item.id == this.searchQuery);
+      }
+      return this.menuItems;
+    },
+
+    // 過濾訂單資料
+    filteredOrders() {
+      if (this.searchQuery) {
+        return this.orders.filter(order =>
+          order.orderId == this.searchQuery);
+      }
+      return this.orders;
     }
   },
+
   methods: {
     setActiveTab(tab) {
       this.activeTab = tab; // 切換當前的 tab
-    }
+    },
+
+    async getData() {
+      try {
+        let response = await fetch("http://localhost:8080/api/restaurant");
+        this.restaurants = await response.json();
+        console.log(this.restaurants);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async search() {
+      try {
+        let response = await fetch("http://localhost:8080/api/restaurant/name/" + this.keyword);
+        this.restaurants = await response.json();
+        console.log(this.restaurants);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async createRestaurant() {
+      try {
+        fetch("http://localhost:8080/api/restaurant", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.newRestaurant),
+        }).then(() => {
+          console.log(response.json);
+          this.getData();
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async deleteRestaurant() {
+      let restId = this.selectedRestaurant.restId;
+      try {
+        await fetch("http://localhost:8080/api/restaurant/" + restId, {
+          method: "DELETE",
+        }).then(() => {
+          this.getData();   // Refresh data after deletion
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    onUpdateRestaurant(restaurant) {
+      this.editRestaurant = { ...restaurant };
+    },
+
+    async updateRestaurant() {
+      try {
+        await fetch("http://localhost:8080/api/restaurant", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(this.editRestaurant),  // Send updated data
+        }).then(() => {
+          this.getData();   // Fetch updated data to reflect changes in the table
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    onSelectRestaurant(restaurant) {
+      this.selectedRestaurant = restaurant;
+    },
+  },
+
+  mounted() {
+    this.getData();
+    console.log("Received searchQuery:", this.searchQuery);
+  },
+
+  created() {   // 頁面一開始就先執行
+    this.getData();
   }
+
 };
+
 </script>
 
 <style>

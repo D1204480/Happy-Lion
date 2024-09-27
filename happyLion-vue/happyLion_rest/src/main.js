@@ -9,6 +9,7 @@ import myFooter from './components/Footer.vue'
 
 
 
+
 const app = createApp(App)
 
 app.use(router)

@@ -2,15 +2,19 @@
   <div>
     <header>
       <div>
-        <!-- navbar 元件裡有 RouterLink -->
-        <navbar />
+        <!-- navbar 元件裡有 RouterLink  -->
+        <!-- <navbar />  -->
       </div>
+
     </header>
 
-    <!-- RoutrtView 切換分頁 -->
-    <RouterView />
+    <body class="d-flex flex-column min-vh-100">  <!-- 讓footer固定在視窗最下方-->
+      
+      <!-- RoutrtView 切換分頁 -->
+      <RouterView />
 
-    <myFooter />
+      <myFooter />
+    </body>
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer">
+  <footer class="footer mt-auto">
     <div class="container">
       <footer class="py-3 my-4">
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
@@ -19,11 +19,11 @@
 </script>
 
 <style>
-.footer {
-    position: absolute;
+ /* .footer {
+    position: relative;
     bottom: 0;
     width: 100%;
     height: 100px;
-    /* background-color: #f5f5f5; */
-}
+     background-color: #f5f5f5; 
+ }  */
 </style>

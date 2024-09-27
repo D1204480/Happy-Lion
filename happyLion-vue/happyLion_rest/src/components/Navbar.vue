@@ -28,8 +28,8 @@
               <RouterLink to="/rest_order" class="nav-link">Order</RouterLink>
             </li>
           </ul>
-          <form class="d-flex" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <form class="d-flex" role="search"  @submit.prevent="handleSearch">
+            <input class="form-control me-2" type="search" placeholder="Search" v-model="searchQuery" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
         </div>
@@ -52,6 +52,23 @@
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      searchQuery: ''  // 綁定搜尋欄的輸入值
+    };
+  },
+  methods: {
+    handleSearch() {
+      if (this.searchQuery) {
+        this.$emit('search', this.searchQuery); // 發送搜尋字串到父組件
+      }
+    }
+  }
+};
+</script>
 
 <style>
 /* 確保按鈕和標籤在同一行 */
