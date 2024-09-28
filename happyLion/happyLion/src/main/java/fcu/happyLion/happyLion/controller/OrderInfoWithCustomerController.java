@@ -1,5 +1,6 @@
 package fcu.happyLion.happyLion.controller;
 
+import fcu.happyLion.happyLion.model.Customer;
 import fcu.happyLion.happyLion.model.OrderInfoWithCustomer;
 import fcu.happyLion.happyLion.service.OrderInfoWithCustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,21 @@ public class OrderInfoWithCustomerController {
     @GetMapping("/name/{keyword}")
     public List<OrderInfoWithCustomer> searchOrderInfoWithCustomerByName(@PathVariable String keyword) {
         return orderInfoWithCustomerService.searchOrderInfoWithCustomerByName(keyword);
+    }
+
+    @PostMapping("")
+    public OrderInfoWithCustomer createOrderInfoWithCustomer(@RequestBody OrderInfoWithCustomer orderInfoWithCustomer) {
+        return orderInfoWithCustomerService.createOrderInfoWithCustomer(orderInfoWithCustomer);
+    }
+
+    @PutMapping("")
+    public OrderInfoWithCustomer createOrderInfoWithCustomer(@RequestBody OrderInfoWithCustomer orderInfoWithCustomer) {
+        return orderInfoWithCustomerService.updateOrderInfoWithCustomer(orderInfoWithCustomer);
+    }
+
+    @DeleteMapping("/{id}")
+    public int createOrderInfoWithCustomer(@PathVariable int id) {
+        return orderInfoWithCustomerService.deleteOrderInfoWithCustomer(id);
     }
 
 

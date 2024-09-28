@@ -27,6 +27,7 @@ public class MenuService {
         menu.setItem(rs.getString("menu_item"));
         menu.setPrice(rs.getInt("menu_price"));
         menu.setRestId(rs.getInt("restaurant_id"));
+        menu.setDescription(rs.getString("description"));
 
         menus.add(menu);  // 新增到陣列
       }
@@ -38,7 +39,7 @@ public class MenuService {
   }
 
 
-  // 取得 menu by ID
+  // 取得 menu by menu's ID
   public Menu getMenuById(int id) {
     Menu menu = new Menu();
 
@@ -62,6 +63,39 @@ public class MenuService {
       e.printStackTrace();
     }
     return null;  // 如果沒找到id
+  }
+
+  // 取得 menu by restaurant's ID
+  public List<Menu> getMenuByRestId(int restId) {
+    List<Menu> menus = new ArrayList<>();  // 建立陣列
+
+    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name "
+        + "FROM Menu m "
+        + "JOIN Restaurant r "
+        + "  ON m.restaurant_id = r.restaurant_id "
+        + "WHERE r.restaurant_id = ? ;";
+
+    try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
+      pstmt.setInt(1, restId);   // 執行sql語法
+
+      try (ResultSet rs = pstmt.executeQuery()) {
+
+        while (rs.next()) {  // 迴圈尋找直到沒資料
+          Menu menu = new Menu();  // 建立物件
+          menu.setId(rs.getInt("menu_id"));
+          menu.setItem(rs.getString("menu_item"));
+          menu.setPrice(rs.getInt("menu_price"));
+          menu.setDescription(rs.getString("description"));
+//          menu.setRestId(rs.getInt("restaurant_id"));
+          menu.setRestName(rs.getString("restaurant_name"));
+
+          menus.add(menu);  // 新增到陣列
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return menus;  // 回傳陣列
   }
 
 

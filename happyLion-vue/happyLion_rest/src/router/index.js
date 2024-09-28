@@ -10,7 +10,8 @@ const router = createRouter({
     {
       path: '/rest_home',
       name: 'rest_home',
-      component: Rest_HomeView
+      component: Rest_HomeView,
+      meta: { activeTab: 'restaurant' }  // 設定為 'restaurant'
     },
     {
       path: '/rest_menu',
@@ -18,12 +19,14 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: Rest_MenuView
+      component: Rest_MenuView,
+      meta: { activeTab: 'menu' }  // 設定為 'menu'
     },
     {
       path: '/rest_order',
       name: 'rest_order',
-      component: Rest_OrderView
+      component: Rest_OrderView,
+      meta: { activeTab: 'orders' }  // 設定為 'orders'
     }
   ]
 })

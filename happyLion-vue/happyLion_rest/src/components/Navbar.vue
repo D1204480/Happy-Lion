@@ -28,8 +28,9 @@
               <RouterLink to="/rest_order" class="nav-link">Order</RouterLink>
             </li>
           </ul>
-          <form class="d-flex" role="search"  @submit.prevent="handleSearch">
-            <input class="form-control me-2" type="search" placeholder="Search" v-model="searchQuery" aria-label="Search">
+          <form class="d-flex" role="search" @submit.prevent="handleSearch">
+            <input class="form-control me-2" type="search" placeholder="Search" v-model="searchQuery"
+              aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
         </div>
@@ -63,7 +64,7 @@ export default {
   methods: {
     handleSearch() {
       if (this.searchQuery) {
-        this.$emit('search', this.searchQuery); // 發送搜尋字串到父組件
+         this.$emit('search', this.searchQuery); // 發送搜尋字串到父組件
       }
     }
   }

@@ -1,5 +1,6 @@
 package fcu.happyLion.happyLion.service;
 
+import fcu.happyLion.happyLion.model.Customer;
 import fcu.happyLion.happyLion.model.OrderInfoWithCustomer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,7 +125,7 @@ public class OrderInfoWithCustomerService {
     }
 
 
-    // 搜尋 Order-info with customer by name
+    // 搜尋 Order-info-with-customer by name
     public List<OrderInfoWithCustomer> searchOrderInfoWithCustomerByName(String keyword) {
         List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立arrayList
 
@@ -158,6 +159,32 @@ public class OrderInfoWithCustomerService {
             e.printStackTrace();
         }
         return orderInfoWithCustomerList;
+    }
+
+
+    // 新增 (INSERT INTO) Order-info-with-customer
+    public Customer createOrderInfoWithCustomer(Customer customer) {
+        String sql = "INSERT INTO Customer (customer_name, customer_tel, customer_zipcode, customer_address) VALUES (?, ?, ?, ?)";
+
+        // key為資料庫自動生成時, Statement.RETURN_GENERATED_KEYS
+        try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, customer.getName());
+            pstmt.setString(2, customer.getTel());
+            pstmt.setString(3, customer.getZipCode());
+            pstmt.setString(4, customer.getAddress());
+
+            pstmt.executeUpdate();  // 執行更新
+
+            try (ResultSet keySet = pstmt.getGeneratedKeys()) {
+                if (keySet.next()) {  // 找到的第一個值
+                    customer.setCustomerId(keySet.getInt(1));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return customer;
     }
 
 } // end of OrderInfoWithCustomerService

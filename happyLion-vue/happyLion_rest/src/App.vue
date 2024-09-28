@@ -10,15 +10,21 @@
 
     <body class="d-flex flex-column min-vh-100">  <!-- 讓footer固定在視窗最下方-->
       
+<!--測試區-->
+
+<!--測試區 -->
+
       <!-- RoutrtView 切換分頁 -->
       <RouterView />
 
       <myFooter />
     </body>
+
   </div>
 </template>
 
 <script setup>
+import RestView from './views/RestView.vue';
 </script>
 
 <style scoped>

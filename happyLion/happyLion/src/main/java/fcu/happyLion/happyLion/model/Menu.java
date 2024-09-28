@@ -12,5 +12,7 @@ public class Menu {
     private String item;
     private int price;
     private int restId;
+    private String restName;
+    private String description;
 
 }

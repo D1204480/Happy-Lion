@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("http://localhost:5173")
 @RequestMapping("/api/menu")
 public class MenuController {
 
@@ -22,6 +23,12 @@ public class MenuController {
   @GetMapping("/{id}")
   public Menu getMenuById(@PathVariable int id) {
     return menuService.getMenuById(id);
+  }
+
+  // search menu by restaurant's ID
+  @GetMapping("/rest-id/{restId}")
+  public List<Menu> getMenuByRestId(@PathVariable int restId) {
+    return menuService.getMenuByRestId(restId);
   }
 
   @GetMapping("/item/{keyword}")

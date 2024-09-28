@@ -1,4 +1,5 @@
 <script setup>
+import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
 </script>
 
 <template>
@@ -11,54 +12,38 @@
 
         <div class="card" style="margin-top: 1.5em;">
           <div class="card-body">
-            <!-- 餐廳基本資料表格 -->
-            <table class="table table-hover" v-if="activeTab === 'restaurant'">
-              <!-- <tbody>
-                <tr>
-                  <th scope="row">餐廳編號:</th>
-                  <td>{{ selectedRestaurant.restaurantId }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">餐廳名稱:</th>
-                  <td>{{ selectedRestaurant.firstName }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">電話:</th>
-                  <td>{{ selectedRestaurant.lastName }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">郵遞區號:</th>
-                  <td>{{ selectedRestaurant.birthday }}</td>
-                </tr>
-                <tr>
-                  <th scope="row">地址:</th>
-                  <td>{{ selectedRestaurant.address }}</td>
-                </tr>
-              </tbody> -->
 
+            <!-- 訂單表格 -->
+            <table class="table table-hover" v-if="activeTab === 'orders'">
               <thead>
                 <tr>
-                  <th scope="col">餐廳編號</th>
+                  <th scope="col">訂單編號</th>
+                  <th scope="col">訂單日期</th>
+                  <th scope="col">顧客名稱</th>
                   <th scope="col">餐廳名稱</th>
-                  <th scope="col">電話</th>
-                  <th scope="col">郵遞區號</th>
-                  <th scope="col">地址</th>
+                  <th scope="col">餐點</th>
+                  <th scope="col">單價</th>
+                  <th scope="col">數量</th>
+                  <th scope="col">總金額</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="restaurant in filteredRestaurants" v-bind:key="restaurant.restId">
-                  <td>{{ restaurant.restId }}</td>
-                  <td>{{ restaurant.name }}</td>
-                  <td>{{ restaurant.tel }}</td>
-                  <td>{{ restaurant.zipcode }}</td>
-                  <td>{{ restaurant.address }}</td>
+                <tr v-for="order in filteredOrders" v-bind:key="order.orderId">
+                  <td>{{ order.orderId }}</td>
+                  <td>{{ order.orderDate }}</td>
+                  <td>{{ order.customerName }}</td>
+                  <td>{{ order.restaurantName }}</td>
+                  <td>{{ order.menuItem }}</td>
+                  <td>{{ order.menuPrice }}</td>
+                  <td>{{ order.quantity }}</td>
+                  <td>{{ order.totalPrice }}</td>
                   <td>
                     <button class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editModal"
-                      @click="onUpdateRestaurant(restaurant)">
+                      @click="onUpdateOrder(Order)">
                       Edit
                     </button>
                     <button class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                      @click="onSelectRestaurant(restaurant)">
+                      @click="onSelectOrder(Order)">
                       Delete
                     </button>
                   </td>
@@ -71,10 +56,10 @@
         <!-- Button trigger modal -->
         <!-- <div class="text-center mt-3">
         <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
-          style="margin-right: 0.5em;" v-on:click="onUpdateRestaurant(restaurant)">Edit</button>
+          style="margin-right: 0.5em;" v-on:click="onUpdateOrder(Order)">Edit</button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-          v-on:click="onSelectRestaurant(restaurant)">Delete</button>
-      </div> -->
+          v-on:click="onSelectOrder(Order)">Delete</button>
+       </div> -->
 
         <!-- Delete Modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -90,7 +75,7 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                  v-on:click="deleteRestaurant">Delete</button>
+                  v-on:click="deleteOrder">Delete</button>
               </div>
             </div>
           </div>
@@ -108,21 +93,21 @@
                 <div class="mb-3 row">
                   <label for="editRestName" class="col-sm-3 col-form-label">餐廳名稱</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editRestName" v-model="editRestaurant.name"
-                      aria-label="Restaurant name">
+                    <input type="text" class="form-control" id="editRestName" v-model="editOrder.name"
+                      aria-label="Order name">
                   </div>
                 </div>
                 <div class="mb-3 row">
                   <label for="editTel" class="col-sm-3 col-form-label">餐廳電話</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editTel" v-model="editRestaurant.tel"
-                      aria-label="Restaurant Tel">
+                    <input type="text" class="form-control" id="editTel" v-model="editOrder.tel"
+                      aria-label="Order Tel">
                   </div>
                 </div>
                 <div class="mb-3 row">
                   <label for="editZip" class="col-sm-3 col-form-label">郵遞區號</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editZip" v-model="editRestaurant.zipcode"
+                    <input type="text" class="form-control" id="editZip" v-model="editOrder.zipcode"
                       aria-label="Zipcode">
                   </div>
                 </div>
@@ -130,7 +115,7 @@
                 <div class="mb-3 row">
                   <label for="editAddress" class="col-sm-3 col-form-label">地址</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editAddress" v-model="editRestaurant.address"
+                    <input type="text" class="form-control" id="editAddress" v-model="editOrder.address"
                       aria-label="Address">
                   </div>
                 </div>
@@ -138,7 +123,7 @@
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal"
-                  v-on:click="updateRestaurant">Update</button>
+                  v-on:click="updateOrder">Update</button>
               </div>
             </div>
           </div>
@@ -146,6 +131,7 @@
       </div>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -156,9 +142,9 @@ export default {
 
   data() {
     return {
-      activeTab: 'restaurant', // 預設為餐廳基本資料
+      activeTab: 'orders', // 預設為orders tab
       tabsContent: {
-        restaurant: {
+        Order: {
           title: '餐廳名字',
           text: '這裡是餐廳的基本資料內容。'
         },
@@ -172,28 +158,38 @@ export default {
         }
       },
 
-      restaurants: [],
+      // 假設這裡是菜單和訂單的數據
+      orders: [],
       keyword: "",
-      selectedRestaurant: {
-        restId: "",
-        name: "",
-        tel: "",
-        zipcode: "",
-        address: "",
+      selectedOrder: {
+        orderId: "",
+        orderDate: "",
+        customerName: "",
+        restaurantName: "",
+        menuItem: "",
+        menuPrice: "",
+        quantity: "",
+        totalPrice: "",
       },
-      newRestaurant: {
-        restId: "",
-        name: "",
-        tel: "",
-        zipcode: "",
-        address: "",
+      newOrder: {
+        orderId: "",
+        orderDate: "",
+        customerName: "",
+        restaurantName: "",
+        menuItem: "",
+        menuPrice: "",
+        quantity: "",
+        totalPrice: "",
       },
-      editRestaurant: {
-        restId: "",
-        name: "",
-        tel: "",
-        zipcode: "",
-        address: "",
+      editOrder: {
+        orderId: "",
+        orderDate: "",
+        customerName: "",
+        restaurantName: "",
+        menuItem: "",
+        menuPrice: "",
+        quantity: "",
+        totalPrice: "",
       },
     };
   },
@@ -206,16 +202,34 @@ export default {
       return this.tabsContent[this.activeTab].text;
     },
 
-    // 過濾餐廳資料
-    filteredRestaurants() {
+    // // 過濾餐廳資料
+    // filteredOrders() {
+    //   if (this.searchQuery) {
+    //     return this.orders.filter(order =>
+    //       order.orderId.toString() === (this.searchQuery) ||
+    //       Order.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+    //     );
+    //   }
+    //   return this.Orders;
+    // },
+
+    // // 過濾菜單資料
+    // filteredMenuItems() {
+    //   if (this.searchQuery) {
+    //     return this.menuItems.filter(item =>
+    //       item.id == this.searchQuery);
+    //   }
+    //   return this.menuItems;
+    // },
+
+    // 過濾訂單資料
+    filteredOrders() {
       if (this.searchQuery) {
-        return this.restaurants.filter(restaurant =>
-          restaurant.restId.toString() === (this.searchQuery) ||
-          restaurant.name.toLowerCase() === (this.searchQuery.toLowerCase())
-        );
+        return this.orders.filter(order =>
+          order.orderId == this.searchQuery);
       }
-      return this.restaurants;
-    },
+      return this.orders;
+    }
   },
 
   methods: {
@@ -225,9 +239,9 @@ export default {
 
     async getData() {
       try {
-        let response = await fetch("http://localhost:8080/api/restaurant");
-        this.restaurants = await response.json();
-        console.log(this.restaurants);
+        let response = await fetch("http://localhost:8080/api/order-info-wc");
+        this.orders = await response.json();
+        console.log(this.orders);
       } catch (error) {
         console.log(error);
       }
@@ -235,22 +249,22 @@ export default {
 
     async search() {
       try {
-        let response = await fetch("http://localhost:8080/api/restaurant/name/" + this.keyword);
-        this.restaurants = await response.json();
-        console.log(this.restaurants);
+        let response = await fetch("http://localhost:8080/api/order-info/name" + this.keyword);
+        this.orders = await response.json();
+        console.log(this.orders);
       } catch (error) {
         console.log(error);
       }
     },
 
-    async createRestaurant() {
+    async createOrder() {
       try {
-        fetch("http://localhost:8080/api/restaurant", {
+        fetch("http://localhost:8080/api/order-info-wc", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(this.newRestaurant),
+          body: JSON.stringify(this.newOrder),
         }).then(() => {
           console.log(response.json);
           this.getData();
@@ -260,10 +274,10 @@ export default {
       }
     },
 
-    async deleteRestaurant() {
-      let restId = this.selectedRestaurant.restId;
+    async deleteOrder() {
+      let orderId = this.selectedOrder.orderId;
       try {
-        await fetch("http://localhost:8080/api/restaurant/" + restId, {
+        await fetch("http://localhost:8080/api/order-info-wc/" + orderId, {
           method: "DELETE",
         }).then(() => {
           this.getData();   // Refresh data after deletion
@@ -273,18 +287,18 @@ export default {
       }
     },
 
-    onUpdateRestaurant(restaurant) {
-      this.editRestaurant = { ...restaurant };
+    onUpdateOrder(order) {
+      this.editOrder = { ...order };
     },
 
-    async updateRestaurant() {
+    async updateOrder() {
       try {
-        await fetch("http://localhost:8080/api/restaurant", {
+        await fetch("http://localhost:8080/api/order-info-wc", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(this.editRestaurant),  // Send updated data
+          body: JSON.stringify(this.editOrder),  // Send updated data
         }).then(() => {
           this.getData();   // Fetch updated data to reflect changes in the table
         });
@@ -293,8 +307,8 @@ export default {
       }
     },
 
-    onSelectRestaurant(restaurant) {
-      this.selectedRestaurant = restaurant;
+    onSelectOrder(order) {
+      this.selectedOrder = order;
     },
   },
 
