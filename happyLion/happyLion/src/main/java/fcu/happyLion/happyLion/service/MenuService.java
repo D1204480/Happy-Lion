@@ -18,7 +18,10 @@ public class MenuService {
   public List<Menu> getAllMenus() {
     List<Menu> menus = new ArrayList<>();  // 建立陣列
 
-    String sql = "SELECT * FROM Menu";
+    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name "
+        + "FROM Menu m "
+        + "JOIN Restaurant r "
+        + "  ON m.restaurant_id = r.restaurant_id; ";
 
     try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
       while (rs.next()) {
@@ -26,7 +29,8 @@ public class MenuService {
         menu.setId(rs.getInt("menu_id"));
         menu.setItem(rs.getString("menu_item"));
         menu.setPrice(rs.getInt("menu_price"));
-        menu.setRestId(rs.getInt("restaurant_id"));
+//        menu.setRestId(rs.getInt("restaurant_id"));
+        menu.setRestName(rs.getString("restaurant_name"));
         menu.setDescription(rs.getString("description"));
 
         menus.add(menu);  // 新增到陣列
