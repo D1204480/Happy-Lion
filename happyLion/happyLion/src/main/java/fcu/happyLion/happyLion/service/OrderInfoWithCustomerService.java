@@ -89,8 +89,8 @@ public class OrderInfoWithCustomerService {
 
 
     // 取得Order-info by Restaurant ID
-    public OrderInfoWithCustomer getOrderInfoRestaurantById(int restId) {
-        OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();
+    public List<OrderInfoWithCustomer> getOrderInfoRestaurantById(int restId) {
+        List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立陣列
 
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
             + "FROM Order_info oi, Customer c, Restaurant r, Menu m, Order_content oc "
@@ -105,7 +105,8 @@ public class OrderInfoWithCustomerService {
 
             try (ResultSet rs = pstmt.executeQuery()) {
 
-                if (rs.next()) {  // 如果有找到id, process the first (and only) row
+                while (rs.next()) {  // 迴圈持續尋找,直到沒有資料
+                    OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();
                     orderinfowithcustomer.setOrderId(rs.getInt("order_id"));
                     orderinfowithcustomer.setOrderDate(rs.getDate("order_date"));
                     orderinfowithcustomer.setCustomerName(rs.getString("customer_name"));
@@ -115,13 +116,13 @@ public class OrderInfoWithCustomerService {
                     orderinfowithcustomer.setQuantity(rs.getInt("quantity"));
                     orderinfowithcustomer.setTotalPrice(rs.getInt("total_price"));
 
-                    return orderinfowithcustomer;
+                    orderInfoWithCustomerList.add(orderinfowithcustomer);
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;  // 如果沒找到id
+        return orderInfoWithCustomerList;
     }
 
 

@@ -28,7 +28,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="order in filteredOrders" v-bind:key="order.orderId">
+                <tr v-for="order in orders" v-bind:key="order.orderId">
                   <td>{{ order.orderId }}</td>
                   <td>{{ order.orderDate }}</td>
                   <td>{{ order.customerName }}</td>
@@ -137,7 +137,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
 <script>
 export default {
   props: {
-    searchQuery: String
+    searchQuery: String,   // 從父組件接收 searchQuery
   },
 
   data() {
@@ -158,7 +158,6 @@ export default {
         }
       },
 
-      // 假設這裡是菜單和訂單的數據
       orders: [],
       keyword: "",
       selectedOrder: {
@@ -194,6 +193,15 @@ export default {
     };
   },
 
+  watch: {
+    // 監聽 searchQuery 變化，當 searchQuery 有更新時觸發 getDatabyRestId
+    searchQuery(newValue) {
+      if (newValue) {
+        this.getDataByRestId(); // 呼叫 API 獲取資料
+      }
+    },
+  },
+
   computed: {
     currentTitle() {
       return this.tabsContent[this.activeTab].title;
@@ -201,26 +209,6 @@ export default {
     currentText() {
       return this.tabsContent[this.activeTab].text;
     },
-
-    // // 過濾餐廳資料
-    // filteredOrders() {
-    //   if (this.searchQuery) {
-    //     return this.orders.filter(order =>
-    //       order.orderId.toString() === (this.searchQuery) ||
-    //       Order.name.toLowerCase().includes(this.searchQuery.toLowerCase())
-    //     );
-    //   }
-    //   return this.Orders;
-    // },
-
-    // // 過濾菜單資料
-    // filteredMenuItems() {
-    //   if (this.searchQuery) {
-    //     return this.menuItems.filter(item =>
-    //       item.id == this.searchQuery);
-    //   }
-    //   return this.menuItems;
-    // },
 
     // 過濾訂單資料
     filteredOrders() {
@@ -242,6 +230,16 @@ export default {
         let response = await fetch("http://localhost:8080/api/order-info-wc");
         this.orders = await response.json();
         console.log(this.orders);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getDataByRestId() {
+      try {
+        let response = await fetch("http://localhost:8080/api/order-info-wc/rest-id/" + this.searchQuery);
+        this.orders = await response.json();
+        console.log(this.orders);   // 檢查 API 回傳的資料
       } catch (error) {
         console.log(error);
       }
@@ -313,7 +311,7 @@ export default {
   },
 
   mounted() {
-    this.getData();
+    this.getData();  // 頁面加載時顯示所有項目
     console.log("Received searchQuery:", this.searchQuery);
   },
 

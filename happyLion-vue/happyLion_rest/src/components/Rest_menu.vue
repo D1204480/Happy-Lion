@@ -6,8 +6,8 @@
   <div class="card text-start">
     <div class="card-header">
       <div class="card-body">
-        <!-- <h5 class="card-title">{{ currentTitle }}</h5>
-        <p class="card-text">{{ currentText }}</p> -->
+        <!-- <h5 class="card-title">{{ currentTitle }}</h5> -->
+        <!-- <p class="card-text">{{ currentText }}</p> -->
 
         <div class="card" style="margin-top: 1.5em;">
           <div class="card-body">
@@ -19,14 +19,16 @@
                   <th scope="col">品項</th>
                   <th scope="col">價格</th>
                   <th scope="col">描述</th>
+                  <th scope="col">餐廳名稱</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="menu in filteredMenuItems" v-bind:key="menu.id">
+                <tr v-for="menu in menuItems" v-bind:key="menu.id">
                   <td>{{ menu.id }}</td>
                   <td>{{ menu.item }}</td>
                   <td>{{ menu.price }}</td>
                   <td>{{ menu.description }}</td>
+                  <td>{{ menu.restName }}</td>
                   <td>
                     <button class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editModal"
                       @click="onUpdateMenu(menu)">
@@ -119,7 +121,7 @@
 <script>
 export default {
   props: {
-    searchQuery: String
+    searchQuery: String,   // 從父組件接收 searchQuery
   },
 
   data() {
@@ -147,23 +149,32 @@ export default {
         item: "",
         price: "",
         description: "",
-        restname: "",
+        restName: "",
       },
       newMenu: {
         id: "",
         item: "",
         price: "",
         description: "",
-        restname: "",
+        restName: "",
       },
       editMenu: {
         id: "",
         item: "",
         price: "",
         description: "",
-        restname: "",
+        restName: "",
       },
     };
+  },
+
+  watch: {
+    // 監聽 searchQuery 變化，當 searchQuery 有更新時觸發 getDatabyRestId
+    searchQuery(newValue) {
+      if (newValue) {
+        this.getDataByRestId(); // 呼叫 API 獲取資料
+      }
+    },
   },
 
   computed: {
@@ -174,7 +185,7 @@ export default {
       return this.tabsContent[this.activeTab].text;
     },
 
-    // 過濾菜單資料
+    // 過濾菜單資料 (從搜尋欄輸入值做比對)
     filteredMenuItems() {
       if (this.searchQuery) {
         return this.menuItems.filter(item =>
@@ -194,6 +205,16 @@ export default {
         let response = await fetch("http://localhost:8080/api/menu");
         this.menuItems = await response.json();
         console.log(this.menuItems);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    async getDataByRestId() {
+      try {
+        let response = await fetch("http://localhost:8080/api/menu/rest-id/" + this.searchQuery);
+        this.menuItems = await response.json();
+        console.log(this.menuItems);   // 檢查 API 回傳的資料
       } catch (error) {
         console.log(error);
       }
@@ -265,7 +286,7 @@ export default {
   },
 
   mounted() {
-    this.getData();
+    this.getData();   // 頁面加載時顯示所有菜單項目
     console.log("Received searchQuery:", this.searchQuery);
   },
 

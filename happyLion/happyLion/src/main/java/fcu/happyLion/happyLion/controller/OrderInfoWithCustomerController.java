@@ -28,8 +28,8 @@ public class OrderInfoWithCustomerController {
     }
 
     // search by restaurant-id
-    @GetMapping("/rest/{restId}")
-    public OrderInfoWithCustomer getOrderInfoRestaurantById(@PathVariable int restId) {
+    @GetMapping("/rest-id/{restId}")
+    public List<OrderInfoWithCustomer> getOrderInfoRestaurantById(@PathVariable int restId) {
         return orderInfoWithCustomerService.getOrderInfoRestaurantById(restId);
     }
 
@@ -40,20 +40,20 @@ public class OrderInfoWithCustomerController {
         return orderInfoWithCustomerService.searchOrderInfoWithCustomerByName(keyword);
     }
 
-    @PostMapping("")
-    public OrderInfoWithCustomer createOrderInfoWithCustomer(@RequestBody OrderInfoWithCustomer orderInfoWithCustomer) {
-        return orderInfoWithCustomerService.createOrderInfoWithCustomer(orderInfoWithCustomer);
-    }
-
-    @PutMapping("")
-    public OrderInfoWithCustomer createOrderInfoWithCustomer(@RequestBody OrderInfoWithCustomer orderInfoWithCustomer) {
-        return orderInfoWithCustomerService.updateOrderInfoWithCustomer(orderInfoWithCustomer);
-    }
-
-    @DeleteMapping("/{id}")
-    public int createOrderInfoWithCustomer(@PathVariable int id) {
-        return orderInfoWithCustomerService.deleteOrderInfoWithCustomer(id);
-    }
+//    @PostMapping("")
+//    public OrderInfoWithCustomer createOrderInfoWithCustomer(@RequestBody OrderInfoWithCustomer orderInfoWithCustomer) {
+//        return orderInfoWithCustomerService.createOrderInfoWithCustomer(orderInfoWithCustomer);
+//    }
+//
+//    @PutMapping("")
+//    public OrderInfoWithCustomer createOrderInfoWithCustomer(@RequestBody OrderInfoWithCustomer orderInfoWithCustomer) {
+//        return orderInfoWithCustomerService.updateOrderInfoWithCustomer(orderInfoWithCustomer);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public int createOrderInfoWithCustomer(@PathVariable int id) {
+//        return orderInfoWithCustomerService.deleteOrderInfoWithCustomer(id);
+//    }
 
 
 } // end of OrderInfoWithCustomerController
