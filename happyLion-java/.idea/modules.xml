@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/happyLion/happyLion.iml" filepath="$PROJECT_DIR$/happyLion/happyLion.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/happyLion-java.iml" filepath="$PROJECT_DIR$/.idea/happyLion-java.iml" />
     </modules>
   </component>
