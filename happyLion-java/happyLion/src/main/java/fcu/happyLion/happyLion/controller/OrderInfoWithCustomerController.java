@@ -23,7 +23,7 @@ public class OrderInfoWithCustomerController {
 
     // search by order-id
     @GetMapping("/{orderId}")
-    public OrderInfoWithCustomer getOrderInfoWithCustomerById(@PathVariable int orderId) {
+    public List<OrderInfoWithCustomer> getOrderInfoWithCustomerById(@PathVariable int orderId) {
         return orderInfoWithCustomerService.getOrderInfoWithCustomerById(orderId);
     }
 

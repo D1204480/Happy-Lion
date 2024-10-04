@@ -23,15 +23,16 @@ public class OrderInfoWithCustomerService {
          *
          */
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
-                + "FROM Order_info oi, Customer c, Restaurant r, Menu m, Order_content oc "
-                + "WHERE oi.customer_id = c.customer_id "
-                + "AND oi.restaurant_id = r.restaurant_id "
-                + "AND oi.order_content_id = oc.order_content_id "
-                + "AND oc.menu_id = m.menu_id ";
+            + "FROM Order_info oi "
+            + "JOIN Customer c ON oi.customer_id = c.customer_id  "
+            + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
+            + "JOIN Order_content oc ON oi.order_id = oc.order_id "
+            + "JOIN Menu m ON m.menu_id = oc.menu_id "
+            + "AND oc.menu_id = m.menu_id ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
-                OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();
+                OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();  // 建立物件
                 orderinfowithcustomer.setOrderId(rs.getInt("order_id"));
                 orderinfowithcustomer.setOrderDate(rs.getDate("order_date"));
                 orderinfowithcustomer.setCustomerName(rs.getString("customer_name"));
@@ -51,16 +52,16 @@ public class OrderInfoWithCustomerService {
     }
 
 
-    // 取得Order-info with Customer by ID
-    public OrderInfoWithCustomer getOrderInfoWithCustomerById(int customerId) {
-        OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();
+    // 取得Order-info with Customer by ORDER-ID
+    public List<OrderInfoWithCustomer> getOrderInfoWithCustomerById(int customerId) {
+        List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立陣列
 
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
-            + "FROM Order_info oi, Customer c, Restaurant r, Menu m, Order_content oc "
-            + "WHERE oi.customer_id = c.customer_id "
-            + "AND oi.restaurant_id = r.restaurant_id "
-            + "AND oi.order_content_id = oc.order_content_id "
-            + "AND oc.menu_id = m.menu_id "
+            + "FROM Order_info oi "
+            + "JOIN Customer c ON oi.customer_id = c.customer_id  "
+            + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
+            + "JOIN Order_content oc ON oi.order_id = oc.order_id "
+            + "JOIN Menu m ON m.menu_id = oc.menu_id "
             + "AND oi.order_id = ? ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -68,7 +69,8 @@ public class OrderInfoWithCustomerService {
 
             try (ResultSet rs = pstmt.executeQuery()) {
 
-                if (rs.next()) {  // 如果有找到id, process the first (and only) row
+                while (rs.next()) {  // 如果有找到id, process all rows
+                    OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();  // 建立物件
                     orderinfowithcustomer.setOrderId(rs.getInt("order_id"));
                     orderinfowithcustomer.setOrderDate(rs.getDate("order_date"));
                     orderinfowithcustomer.setCustomerName(rs.getString("customer_name"));
@@ -78,13 +80,13 @@ public class OrderInfoWithCustomerService {
                     orderinfowithcustomer.setQuantity(rs.getInt("quantity"));
                     orderinfowithcustomer.setTotalPrice(rs.getInt("total_price"));
 
-                    return orderinfowithcustomer;
+                    orderInfoWithCustomerList.add(orderinfowithcustomer);  // 新增到陣列
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;  // 如果沒找到id
+        return orderInfoWithCustomerList;  // 回傳陣列
     }
 
 
@@ -93,11 +95,11 @@ public class OrderInfoWithCustomerService {
         List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立陣列
 
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
-            + "FROM Order_info oi, Customer c, Restaurant r, Menu m, Order_content oc "
-            + "WHERE oi.customer_id = c.customer_id "
-            + "AND oi.restaurant_id = r.restaurant_id "
-            + "AND oi.order_content_id = oc.order_content_id "
-            + "AND oc.menu_id = m.menu_id "
+            + "FROM Order_info oi "
+            + "JOIN Customer c ON oi.customer_id = c.customer_id  "
+            + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
+            + "JOIN Order_content oc ON oi.order_id = oc.order_id "
+            + "JOIN Menu m ON m.menu_id = oc.menu_id "
             + "AND r.restaurant_id = ? ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -131,11 +133,11 @@ public class OrderInfoWithCustomerService {
         List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立arrayList
 
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
-            + "FROM Order_info oi, Customer c, Restaurant r, Menu m, Order_content oc "
-            + "WHERE oi.customer_id = c.customer_id "
-            + "AND oi.restaurant_id = r.restaurant_id "
-            + "AND oi.order_content_id = oc.order_content_id "
-            + "AND oc.menu_id = m.menu_id "
+            + "FROM Order_info oi "
+            + "JOIN Customer c ON oi.customer_id = c.customer_id  "
+            + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
+            + "JOIN Order_content oc ON oi.order_id = oc.order_id "
+            + "JOIN Menu m ON m.menu_id = oc.menu_id "
             + "AND customer_name LIKE ?";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
