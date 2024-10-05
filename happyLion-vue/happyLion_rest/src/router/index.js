@@ -19,7 +19,7 @@ const router = createRouter({
       name: 'rest_home',
       component: Rest_HomeView,
       meta: { activeTab: 'restaurant' },  // 設定為 'restaurant'
-      props: route => ({ username: route.query.username, password: route.query.password }) // 將查詢參數作為 props 傳遞
+      // props: route => ({ username: route.query.username, password: route.query.password }) // 將查詢參數作為 props 傳遞
     },
     {
       path: '/rest_menu', 

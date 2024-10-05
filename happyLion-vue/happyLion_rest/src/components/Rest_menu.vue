@@ -201,12 +201,12 @@ export default {
       return this.tabsContent[this.activeTab].text;
     },
 
-    // 過濾菜單資料
+    // 過濾菜單資料 (by menu-id)
     filteredMenuItems() {
       // 從localStorage抓取username, username為餐廳帳號(restId)
       if (this.localUsername) {
         return this.menuItems.filter(item =>
-          item.restId == (this.localUsername)
+          item.id == (this.localUsername)
         );
       }
 

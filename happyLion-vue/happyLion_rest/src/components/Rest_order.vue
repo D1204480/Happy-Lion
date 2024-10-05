@@ -100,8 +100,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                 <div class="mb-3 row">
                   <label for="editTel" class="col-sm-3 col-form-label">餐廳電話</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editTel" v-model="editOrder.tel"
-                      aria-label="Order Tel">
+                    <input type="text" class="form-control" id="editTel" v-model="editOrder.tel" aria-label="Order Tel">
                   </div>
                 </div>
                 <div class="mb-3 row">
@@ -130,18 +129,30 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
         </div>
       </div>
     </div>
+    <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
   </div>
 
 </template>
 
 <script>
 export default {
-  props: {
-    searchQuery: String,   // 從父組件接收 searchQuery
+  props: { // props接收只能讀, 值不能被改變
+    searchQuery: String,   // 接收navbar的搜尋欄
+    username: {
+      type: String,
+      required: false, // 如果有可能未傳遞，設置為非必需
+      default: '' // 設置默認值
+    },
+    password: {
+      type: String,
+      required: false,
+      default: ''
+    }
   },
 
   data() {
     return {
+      localUsername: '', // 本地變數，存放 username
       activeTab: 'orders', // 預設為orders tab
       tabsContent: {
         Order: {
@@ -210,8 +221,15 @@ export default {
       return this.tabsContent[this.activeTab].text;
     },
 
-    // 過濾訂單資料
+    // 過濾訂單資料 (by order-id)
     filteredOrders() {
+      // 從localStorage抓取username, username為餐廳帳號(restId)
+      if (this.localUsername) {
+        return this.menuItems.filter(item =>
+          order.restId == (this.localUsername)
+        );
+      }
+
       if (this.searchQuery) {
         return this.orders.filter(order =>
           order.orderId == this.searchQuery);
@@ -237,7 +255,7 @@ export default {
 
     async getDataByRestId() {
       try {
-        let response = await fetch("http://localhost:8080/api/order-info-wc/rest-id/" + this.searchQuery);
+        let response = await fetch("http://localhost:8080/api/order-info-wc/rest-id/" + this.localUsername);
         this.orders = await response.json();
         console.log(this.orders);   // 檢查 API 回傳的資料
       } catch (error) {
@@ -311,12 +329,28 @@ export default {
   },
 
   mounted() {
-    this.getData();  // 頁面加載時顯示所有項目
+    // 獲取初始資料
+    // this.getData();  // 頁面加載時顯示所有項目
+
+    // 如果 props.username 為空，從 localStorage 讀取
+    if (!this.username) {
+      this.localUsername = localStorage.getItem('username') || '';
+    } else {
+      this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
+    }
+
+    // 如果 localUsername 不為空，呼叫 getDataByRestId()
+    if (this.localUsername) {
+      this.getDataByRestId();
+    }
+
+    console.log("Received username:", this.localUsername);
+    console.log("Received password:", this.password);
     console.log("Received searchQuery:", this.searchQuery);
   },
 
   created() {   // 頁面一開始就先執行
-    this.getData();
+    // this.getData();
   }
 
 };
