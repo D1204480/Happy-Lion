@@ -145,13 +145,18 @@
         </div>
       </div>
     </div>
+    <h2>測試: 來自homeView的表單帳號, {{ username }}!</h2>
   </div>
 </template>
 
 <script>
+import { defineProps } from 'vue';
+
 export default {
   props: {
-    searchQuery: String
+    searchQuery: String,   // 接收navbar的搜尋欄
+    username: String,   // 接收 username
+    password: String,   // 接收 password
   },
 
   data() {
@@ -299,12 +304,14 @@ export default {
   },
 
   mounted() {
-    this.getData();
+    // this.getData();
     console.log("Received searchQuery:", this.searchQuery);
+    console.log("Received username:", this.username);
+    console.log("Received password:", this.password);
   },
 
   created() {   // 頁面一開始就先執行
-    this.getData();
+    // this.getData();
   }
 
 };
