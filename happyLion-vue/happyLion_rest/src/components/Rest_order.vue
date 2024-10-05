@@ -39,11 +39,11 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                   <td>{{ order.totalPrice }}</td>
                   <td>
                     <button class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editModal"
-                      @click="onUpdateOrder(Order)">
+                      @click="onUpdateOrder(order)">
                       Edit
                     </button>
                     <button class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                      @click="onSelectOrder(Order)">
+                      @click="onSelectOrder(order)">
                       Delete
                     </button>
                   </td>
@@ -91,31 +91,44 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
               </div>
               <div class="modal-body">
                 <div class="mb-3 row">
+                  <label for="editOrderDate" class="col-sm-3 col-form-label">訂單日期</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="editOrderDate" v-model="editOrder.orderDate"
+                      aria-label="OrderDate">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="editCustomerName" class="col-sm-3 col-form-label">顧客名稱</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="editCustomerName" v-model="editOrder.customerName" aria-label="OrderCustomerName">
+                  </div>
+                </div>
+                <div class="mb-3 row">
                   <label for="editRestName" class="col-sm-3 col-form-label">餐廳名稱</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editRestName" v-model="editOrder.name"
-                      aria-label="Order name">
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <label for="editTel" class="col-sm-3 col-form-label">餐廳電話</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editTel" v-model="editOrder.tel" aria-label="Order Tel">
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <label for="editZip" class="col-sm-3 col-form-label">郵遞區號</label>
-                  <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editZip" v-model="editOrder.zipcode"
+                    <input type="text" class="form-control" id="editRestName" v-model="editOrder.restaurantName"
                       aria-label="Zipcode">
                   </div>
                 </div>
-
                 <div class="mb-3 row">
-                  <label for="editAddress" class="col-sm-3 col-form-label">地址</label>
+                  <label for="editMenuItem" class="col-sm-3 col-form-label">餐點</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" id="editAddress" v-model="editOrder.address"
-                      aria-label="Address">
+                    <input type="text" class="form-control" id="editMenuItem" v-model="editOrder.menuItem"
+                      aria-label="MenuItem">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="editMenuPrice" class="col-sm-3 col-form-label">單價</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="editMenuPrice" v-model="editOrder.menuPrice"
+                      aria-label="MenuPrice">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="editQuantity" class="col-sm-3 col-form-label">數量</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="editQuantity" v-model="editOrder.quantity"
+                      aria-label="quantity">
                   </div>
                 </div>
               </div>

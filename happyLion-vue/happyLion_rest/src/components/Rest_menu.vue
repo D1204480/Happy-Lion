@@ -23,7 +23,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="menu in menuItems" v-bind:key="menu.id">
+                <tr v-for="menu in filteredMenuItems" v-bind:key="menu.id">
                   <td>{{ menu.id }}</td>
                   <td>{{ menu.item }}</td>
                   <td>{{ menu.price }}</td>
@@ -206,7 +206,7 @@ export default {
       // 從localStorage抓取username, username為餐廳帳號(restId)
       if (this.localUsername) {
         return this.menuItems.filter(item =>
-          item.id == (this.localUsername)
+          item.restId == (this.localUsername)
         );
       }
 
