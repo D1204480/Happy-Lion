@@ -1,7 +1,5 @@
 <template>
   <div>
-    <h1>Welcome to the Home Page!</h1>
-
     <!-- 如果尚未登入，顯示登入表單 -->
     <section v-if="!isLoggedIn" class="container px-4 py-5 mt-auto text-center text-lg-start">
       <div class="card mb-3">
@@ -49,7 +47,8 @@ const password = ref('');
 const handleLogin = () => {
   console.log('Logging in with username:', username.value, 'and password:', password.value);
   isLoggedIn.value = true; // 登入成功，更新狀態
-  localStorage.setItem('isLoggedIn', 'true'); // 儲存登入狀態
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.setItem('username', username.value); // 儲存 username 到 localStorage
 
   // 跳轉到 RestHomeView，並傳遞 username 和 password
   router.push({ name: 'rest_home', params: { username: username.value, password: password.value } });

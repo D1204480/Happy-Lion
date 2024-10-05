@@ -10,7 +10,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue';
 
     <div>
       <!-- Navbar 組件負責處理使用者輸入的搜尋 -->
-      <Navbar @search="updateSearchQuery" />
+      <!-- <Navbar @search="updateSearchQuery" /> -->
 
       <!-- Rest_nav_v2 組件顯示或使用搜尋結果 -->
       <Rest_nav_v2 :searchQuery="searchQuery" />

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="my-3">
-      <h4>餐廳編號: {{ searchQuery }}</h4>
+    <!-- <div class="my-3"> -->
+      <!-- <h4>餐廳編號: {{ searchQuery }}</h4> -->
       <!-- 這裡可以顯示或處理搜尋結果 -->
-    </div>
+    <!-- </div> -->
 
     <!-- navbar navigation -->
     <div class="card text-start">

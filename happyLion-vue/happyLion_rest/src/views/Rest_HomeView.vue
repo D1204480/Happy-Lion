@@ -8,7 +8,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue';
   <div>
     <div>
       <!-- Navbar 組件負責處理使用者輸入的搜尋 -->
-      <Navbar @search="updateSearchQuery" />
+      <!-- <Navbar @search="updateSearchQuery" /> -->
 
       <!-- Rest_nav_v2, Rest_home, 顯示或使用 searchQuery 結果 -->
       <!-- 傳遞 username 到 rest_home.vue -->
@@ -22,6 +22,19 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue';
 
 <script>
 export default {
+  props: {
+    username: {
+      type: String,
+      required: false,
+      default: ''
+    },
+    password: {
+      type: String,
+      required: false,
+      default: ''
+    }
+  },
+
   data() {
     return {
       searchQuery: '' // 這裡存儲搜尋的內容
@@ -50,6 +63,18 @@ export default {
     Navbar,
     Rest_nav_v2,
     Rest_home,
+  },
+
+  mounted() {
+    // 如果 props.username 為空，從 localStorage 讀取
+    if (!this.username) {
+      this.localUsername = localStorage.getItem('username') || '';
+    } else {
+      this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
+    }
+
+    console.log("Received username:", this.localUsername);
   }
+
 };
 </script>

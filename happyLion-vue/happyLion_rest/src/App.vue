@@ -3,7 +3,7 @@
     <header>
       <div>
         <!-- navbar 元件裡有 RouterLink  -->
-        <!-- <navbar />  -->
+        <navbar /> 
       </div>
 
     </header>

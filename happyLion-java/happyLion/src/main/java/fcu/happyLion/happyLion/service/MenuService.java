@@ -18,7 +18,7 @@ public class MenuService {
   public List<Menu> getAllMenus() {
     List<Menu> menus = new ArrayList<>();  // 建立陣列
 
-    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name "
+    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name,  r.restaurant_id  "
         + "FROM Menu m "
         + "JOIN Restaurant r "
         + "  ON m.restaurant_id = r.restaurant_id; ";
@@ -29,7 +29,7 @@ public class MenuService {
         menu.setId(rs.getInt("menu_id"));
         menu.setItem(rs.getString("menu_item"));
         menu.setPrice(rs.getInt("menu_price"));
-//        menu.setRestId(rs.getInt("restaurant_id"));
+        menu.setRestId(rs.getInt("restaurant_id"));
         menu.setRestName(rs.getString("restaurant_name"));
         menu.setDescription(rs.getString("description"));
 
@@ -47,7 +47,7 @@ public class MenuService {
   public Menu getMenuById(int id) {
     Menu menu = new Menu();
 
-    String sql = "SELECT * FROM Menu WHERE  menu_id = ?";
+    String sql = "SELECT * FROM Menu WHERE menu_id = ?";
 
     try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
       pstmt.setInt(1, id);   // 執行sql語法
@@ -59,6 +59,8 @@ public class MenuService {
           menu.setItem(rs.getString("menu_item"));
           menu.setPrice(rs.getInt("menu_price"));
           menu.setRestId(rs.getInt("restaurant_id"));
+          menu.setRestName(rs.getString("restaurant_name"));
+          menu.setDescription(rs.getString("description"));
 
           return menu;
         }
@@ -73,7 +75,7 @@ public class MenuService {
   public List<Menu> getMenuByRestId(int restId) {
     List<Menu> menus = new ArrayList<>();  // 建立陣列
 
-    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name "
+    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name, r.restaurant_id "
         + "FROM Menu m "
         + "JOIN Restaurant r "
         + "  ON m.restaurant_id = r.restaurant_id "
@@ -90,7 +92,7 @@ public class MenuService {
           menu.setItem(rs.getString("menu_item"));
           menu.setPrice(rs.getInt("menu_price"));
           menu.setDescription(rs.getString("description"));
-//          menu.setRestId(rs.getInt("restaurant_id"));
+          menu.setRestId(rs.getInt("restaurant_id"));
           menu.setRestName(rs.getString("restaurant_name"));
 
           menus.add(menu);  // 新增到陣列
@@ -107,7 +109,11 @@ public class MenuService {
   public List<Menu> searchMenusByItem(String keyword) {
     List<Menu> menus = new ArrayList<>();  // 建立arrayList
 
-    String sql = "SELECT * FROM Menu WHERE menu_item LIKE ?";
+    String sql = "SELECT m.menu_id, m.menu_item, m.menu_price, m.description, r.restaurant_name, r.restaurant_id "
+        + "FROM Menu m "
+        + "JOIN Restaurant r "
+        + "  ON m.restaurant_id = r.restaurant_id "
+        + "WHERE menu_item LIKE ?";
 
     try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
       pstmt.setString(1, "%" + keyword + "%");   // 執行sql語法
@@ -118,7 +124,9 @@ public class MenuService {
           menu.setId(rs.getInt("menu_id"));
           menu.setItem(rs.getString("menu_item"));
           menu.setPrice(rs.getInt("menu_price"));
+          menu.setDescription(rs.getString("description"));
           menu.setRestId(rs.getInt("restaurant_id"));
+          menu.setRestName(rs.getString("restaurant_name"));
 
           menus.add(menu);  // 加入arrayList
         }

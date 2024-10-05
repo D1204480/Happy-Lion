@@ -15,17 +15,15 @@ const router = createRouter({
     },
 
     {
-      path: '/rest_home/:username',  // 將 params 定義在路徑中
+      path: '/rest_home',  // 將 params 定義在路徑中
       name: 'rest_home',
       component: Rest_HomeView,
       meta: { activeTab: 'restaurant' },  // 設定為 'restaurant'
+      props: route => ({ username: route.query.username, password: route.query.password }) // 將查詢參數作為 props 傳遞
     },
     {
-      path: '/rest_menu',
+      path: '/rest_menu', 
       name: 'rest_menu',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: Rest_MenuView,
       meta: { activeTab: 'menu' }  // 設定為 'menu'
     },

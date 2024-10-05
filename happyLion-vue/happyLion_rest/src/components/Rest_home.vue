@@ -145,22 +145,29 @@
         </div>
       </div>
     </div>
-    <h2>測試: 來自homeView的表單帳號, {{ username }}!</h2>
+    <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
   </div>
 </template>
 
 <script>
-import { defineProps } from 'vue';
-
 export default {
-  props: {
+  props: { // props接收只能讀, 值不能被改變
     searchQuery: String,   // 接收navbar的搜尋欄
-    username: String,   // 接收 username
-    password: String,   // 接收 password
+    username: {
+      type: String,
+      required: false, // 如果有可能未傳遞，設置為非必需
+      default: '' // 設置默認值
+    },
+    password: {
+      type: String,
+      required: false,
+      default: ''
+    }
   },
 
   data() {
     return {
+      localUsername: '', // 本地變數，存放 username
       activeTab: 'restaurant', // 預設為餐廳基本資料
       tabsContent: {
         restaurant: {
@@ -213,12 +220,21 @@ export default {
 
     // 過濾餐廳資料
     filteredRestaurants() {
+      // 抓取navbar輸入值
       if (this.searchQuery) {
         return this.restaurants.filter(restaurant =>
           restaurant.restId.toString() === (this.searchQuery) ||
           restaurant.name.toLowerCase() === (this.searchQuery.toLowerCase())
         );
       }
+
+      // 從localStorage抓取username
+      if (this.localUsername) {
+        return this.restaurants.filter(restaurant =>
+          restaurant.restId.toString() === (this.localUsername)
+        );
+      }
+
       return this.restaurants;
     },
   },
@@ -304,10 +320,18 @@ export default {
   },
 
   mounted() {
-    // this.getData();
-    console.log("Received searchQuery:", this.searchQuery);
-    console.log("Received username:", this.username);
+    this.getData();
+
+    // 如果 props.username 為空，從 localStorage 讀取
+    if (!this.username) {
+      this.localUsername = localStorage.getItem('username') || '';
+    } else {
+      this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
+    }
+
+    console.log("Received username:", this.localUsername);
     console.log("Received password:", this.password);
+    console.log("Received searchQuery:", this.searchQuery);
   },
 
   created() {   // 頁面一開始就先執行
