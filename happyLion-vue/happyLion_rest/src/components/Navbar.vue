@@ -17,7 +17,7 @@
 
         <!-- Navbar Links -->
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <ul class="navbar-nav me-auto mb-lg-0">
             <li class="nav-item">
               <RouterLink to="/rest_home" class="nav-link active" aria-current="page">Home</RouterLink>
             </li>
@@ -34,6 +34,28 @@
             <button class="btn btn-outline-success" type="submit">Search</button>
           </form>
         </div>
+
+        <!-- user_icon Avatar dropdown  -->
+        <div class="dropdown mx-1">
+          <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img src="https://picsum.photos/id/250/200" class="rounded-circle" height="35" alt="user_icon"
+              loading="lazy" />
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuAvatar">
+            <li>
+              <a class="dropdown-item" href="#">My profile</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">Settings</a>
+            </li>
+            <li>
+              <!-- 將 @click 事件綁定到 Logout 按鈕上 -->
+              <a class="dropdown-item" href="#" @click="logout">Logout</a>
+            </li>
+          </ul>
+        </div>
+
       </div>
     </nav>
 
@@ -51,6 +73,7 @@
         <p>System Management</p>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -64,8 +87,16 @@ export default {
   methods: {
     handleSearch() {
       if (this.searchQuery) {
-         this.$emit('search', this.searchQuery); // 發送搜尋字串到父組件
+        this.$emit('search', this.searchQuery); // 發送搜尋字串到父組件
       }
+    },
+
+    logout() {
+      // 清空 localStorage 的 username
+      localStorage.removeItem('username');
+      
+      // 根據需要，跳轉到登錄頁面或首頁
+      this.$router.push({ name: 'Home' }); // 假設你有一個名為 'login' 的路由
     }
   }
 };
