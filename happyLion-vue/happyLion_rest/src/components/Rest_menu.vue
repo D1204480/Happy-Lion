@@ -157,26 +157,29 @@ export default {
 
       menuItems: [],
       keyword: "",
-      selectedMenu: {
+      selectedMenu: {   // 選中的菜單
         id: "",
         item: "",
         price: "",
         description: "",
         restName: "",
+        restId: "",
       },
-      newMenu: {
+      newMenu: {   // 用於新增菜單的資料
         id: "",
         item: "",
         price: "",
         description: "",
         restName: "",
+        restId: "",
       },
-      editMenu: {
+      editMenu: {   // 用於編輯菜單的資料
         id: "",
         item: "",
         price: "",
         description: "",
         restName: "",
+        restId: "",
       },
     };
   },
@@ -200,17 +203,17 @@ export default {
 
     // 過濾菜單資料
     filteredMenuItems() {
+      // 從localStorage抓取username, username為餐廳帳號(restId)
+      if (this.localUsername) {
+        return this.menuItems.filter(item =>
+          item.restId == (this.localUsername)
+        );
+      }
+
       // 從navbar搜尋欄輸入值做比對
       if (this.searchQuery) {
         return this.menuItems.filter(item =>
           item.id == this.searchQuery);
-      }
-
-      // 從localStorage抓取username
-      if (this.localUsername) {  //username為餐廳帳號
-        return this.menuItems.filter(item =>
-          item.id == (this.localUsername)
-        );
       }
 
       return this.menuItems;
@@ -308,7 +311,8 @@ export default {
   },
 
   mounted() {
-    this.getData();   // 頁面加載時顯示所有菜單項目
+    // 獲取初始資料
+    // this.getData();   // 頁面加載時顯示所有菜單項目
 
     // 如果 props.username 為空，從 localStorage 讀取
     if (!this.username) {
@@ -317,13 +321,18 @@ export default {
       this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
     }
 
+    // 如果 localUsername 不為空，呼叫 getDataByRestId()
+    if (this.localUsername) {
+      this.getDataByRestId();
+    }
+
     console.log("Received username:", this.localUsername);
     console.log("Received password:", this.password);
     console.log("Received searchQuery:", this.searchQuery);
   },
 
   created() {   // 頁面一開始就先執行
-    this.getData();
+    // this.getData();
   }
 
 };
