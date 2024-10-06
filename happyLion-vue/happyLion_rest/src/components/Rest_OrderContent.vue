@@ -56,7 +56,7 @@
 
     <!-- Delete Modal -->
     <!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true"> -->
-      <!-- <div class="modal-dialog modal-dialog-centered">
+    <!-- <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
@@ -76,7 +76,7 @@
 
     <!-- Edit Modal -->
     <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"> -->
-      <!-- <div class="modal-dialog modal-dialog-centered">
+    <!-- <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="editModalLabel">Edit</h5>
@@ -161,6 +161,7 @@ export default {
   data() {
     return {
       localUsername: '', // 本地變數，存放 username
+      orderId: '', // 用來儲存從 router 傳遞的 orderId
       activeTab: 'orders', // 預設為orders tab
       tabsContent: {
         Order: {
@@ -271,6 +272,16 @@ export default {
       }
     },
 
+     async getOrderDetails(localUsername, orderId) { 
+      try {
+        let response = await fetch(`http://localhost:8080/api/order-info-wc/rest-id/${localUsername}/${orderId}`); // 根據 localUsername 和 orderId 獲取詳細資料
+        this.orders = await response.json(); // 假設 API 返回的是該 orderId 的詳細資訊
+        console.log(this.orders);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
     async search() {
       try {
         let response = await fetch("http://localhost:8080/api/order-info/name" + this.keyword);
@@ -341,20 +352,33 @@ export default {
     // this.getData();  // 頁面加載時顯示所有項目
 
     // 如果 props.username 為空，從 localStorage 讀取
-    if (!this.username) {
-      this.localUsername = localStorage.getItem('username') || '';
-    } else {
-      this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
-    }
+    // if (!this.username) {
+    //   this.localUsername = localStorage.getItem('username') || '';
+    // } else {
+    //   this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
+    // }
 
     // 如果 localUsername 不為空，呼叫 getDataByRestId()
-    if (this.localUsername) {
-      this.getDataByRestId();
-    }
-
+    // if (this.localUsername) {
+    //   this.getDataByRestId();
+    // }
     console.log("Received username:", this.localUsername);
     console.log("Received password:", this.password);
     console.log("Received searchQuery:", this.searchQuery);
+
+
+    // 獲取 orderId 和 localUsername
+    this.orderId = this.$route.query.orderId;  // 取得路由 query 中的 orderId
+    this.localUsername = this.$route.query.localUsername; // 取得路由 query 中的 localUsername
+
+    // 確認 orderId 和 localUsername 是否存在，然後執行相應的邏輯
+    if (this.orderId && this.localUsername) {
+      console.log("Received orderId:", this.orderId);
+      console.log("Received localUsername:", this.localUsername);
+      // 呼叫方法獲取該訂單的詳細信息
+      this.getOrderDetails(this.localUsername, this.orderId);
+    }
+
   },
 
   created() {   // 頁面一開始就先執行

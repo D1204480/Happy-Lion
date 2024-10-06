@@ -6,6 +6,7 @@ import Rest_OrderView from '../views/Rest_OrderView.vue'
 import Rest_OrderContentView from '../views/Rest_OrderContentView.vue'
 
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -38,7 +39,6 @@ const router = createRouter({
       path: '/rest_order_content',
       name: 'rest_order_content',
       component: Rest_OrderContentView,
-      
     },
 
   ]

@@ -1,4 +1,5 @@
 <script setup>
+import Navbar from '../components/Navbar.vue';
 import Rest_order_content from '../components/Rest_OrderContent.vue'
 </script>
 
@@ -43,8 +44,6 @@ export default {
   },
 
   components: {
-    Navbar,
-    Rest_nav_v2,
     Rest_order_content,
   },
 

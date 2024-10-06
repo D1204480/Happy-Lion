@@ -38,31 +38,14 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                   <td>{{ order.totalQuantity }}</td>
                   <td>{{ order.totalPrice }}</td>
                   <td>
-                    <!-- <button class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editModal"
-                      @click="onUpdateOrder(order)">
-                      Edit
-                    </button>
-                    <button class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                      @click="onSelectOrder(order)">
-                      Delete
-                    </button> -->
-
-                    <!-- 跳轉到訂單品項頁面 -->
-                    <router-link to="/rest_order_content" class="btn btn-success">詳細內容</router-link>
+                    <!-- 跳轉到訂單品項頁面, 傳遞 orderId 作為查詢參數 -->
+                    <router-link :to="{ path: '/rest_order_content', query: { orderId: order.orderId, localUsername: localUsername } }" class="btn btn-success">詳細內容</router-link>
                   </td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-
-        <!-- Button trigger modal -->
-        <!-- <div class="text-center mt-3">
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal"
-          style="margin-right: 0.5em;" v-on:click="onUpdateOrder(Order)">Edit</button>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
-          v-on:click="onSelectOrder(Order)">Delete</button>
-       </div> -->
 
         <!-- Delete Modal -->
          <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
