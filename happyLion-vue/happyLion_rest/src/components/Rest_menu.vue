@@ -3,7 +3,7 @@
 
 <template>
   <!-- navigation 顯示區 -->
-  <div class="card text-start">
+  <div class="card text-center">
     <div class="card-header">
       <div class="card-body">
         <!-- <h5 class="card-title">{{ currentTitle }}</h5> -->

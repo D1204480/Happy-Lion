@@ -3,7 +3,7 @@
 
 <template>
   <!-- navigation 顯示區 -->
-  <div class="card text-start">
+  <div class="card text-center">
     <div class="card-header">
       <div class="card-body">
         <!-- <h5 class="card-title">{{ currentTitle }}</h5>
@@ -48,6 +48,7 @@
               <tbody>
                 <tr v-for="restaurant in filteredRestaurants" v-bind:key="restaurant.restId">
                   <td>{{ restaurant.restId }}</td>
+                  <td>{{ restaurant.name }}</td>
                   <td>{{ restaurant.name }}</td>
                   <td>{{ restaurant.tel }}</td>
                   <td>{{ restaurant.zipcode }}</td>
