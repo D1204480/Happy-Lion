@@ -34,9 +34,9 @@ public class OrderInfoWithCustomerController {
     }
 
     // search order_content by order-id (顯示每筆訂單資訊的細項order_content)
-    @GetMapping("/rest-id/order/{orderId}")
-    public List<OrderInfoWithCustomer> getOrderContentByOrderId(@PathVariable int orderId) {
-        return orderInfoWithCustomerService.getOrderContentByOrderId(orderId);
+    @GetMapping("/rest-id/{restId}/{orderId}")
+    public List<OrderInfoWithCustomer> getOrderContentByOrderId(@PathVariable int restId, @PathVariable int orderId) {
+        return orderInfoWithCustomerService.getOrderContentByOrderId(restId, orderId);
     }
 
     // search by customer's name

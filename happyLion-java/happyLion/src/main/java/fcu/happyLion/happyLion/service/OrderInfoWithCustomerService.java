@@ -28,7 +28,7 @@ public class OrderInfoWithCustomerService {
             + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
             + "JOIN Order_content oc ON oi.order_id = oc.order_id "
             + "JOIN Menu m ON m.menu_id = oc.menu_id "
-            + "AND oc.menu_id = m.menu_id ";
+            + "WHERE oc.menu_id = m.menu_id ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
@@ -62,7 +62,7 @@ public class OrderInfoWithCustomerService {
             + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
             + "JOIN Order_content oc ON oi.order_id = oc.order_id "
             + "JOIN Menu m ON m.menu_id = oc.menu_id "
-            + "AND oi.order_id = ? ";
+            + "WHERE oi.order_id = ? ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, customerId);   // 執行sql語法
@@ -130,7 +130,7 @@ public class OrderInfoWithCustomerService {
     }
 
     // 取得Order-content by order-id (顯示每筆訂單下的各品項)
-    public List<OrderInfoWithCustomer> getOrderContentByOrderId(int restId) {
+    public List<OrderInfoWithCustomer> getOrderContentByOrderId(int restId, int orderId) {
         List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立陣列
 
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
@@ -140,10 +140,11 @@ public class OrderInfoWithCustomerService {
             + "JOIN Order_content oc ON oi.order_id = oc.order_id "
             + "JOIN Menu m ON m.menu_id = oc.menu_id "
             + "WHERE r.restaurant_id = ? "
-            + "GROUP BY oi.order_id ASC; ";
+            + " AND oi.order_id = ?; ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, restId);   // 執行sql語法
+            pstmt.setInt(2, orderId);   // 執行sql語法
 
             try (ResultSet rs = pstmt.executeQuery()) {
 
