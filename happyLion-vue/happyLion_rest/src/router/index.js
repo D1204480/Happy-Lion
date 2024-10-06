@@ -3,7 +3,7 @@ import Home from '../views/HomeView.vue'; // 引入你的 Home 組件
 import Rest_HomeView from '../views/Rest_HomeView.vue'
 import Rest_MenuView from '../views/Rest_MenuView.vue'
 import Rest_OrderView from '../views/Rest_OrderView.vue'
-import Rest_OrderContentView from '@/views/Rest_OrderContentView.vue';
+import Rest_OrderContentView from '../views/Rest_OrderContentView.vue'
 
 
 const router = createRouter({
@@ -38,7 +38,7 @@ const router = createRouter({
       path: '/rest_order_content',
       name: 'rest_order_content',
       component: Rest_OrderContentView,
-      // meta: { activeTab: 'orders' }  // 設定為 'orders'
+      
     },
 
   ]
