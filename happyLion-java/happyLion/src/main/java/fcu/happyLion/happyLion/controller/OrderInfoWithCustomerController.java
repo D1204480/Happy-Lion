@@ -27,12 +27,17 @@ public class OrderInfoWithCustomerController {
         return orderInfoWithCustomerService.getOrderInfoWithCustomerById(orderId);
     }
 
-    // search by restaurant-id
+    // search by restaurant-id (僅顯示每筆訂單資訊order-info)
     @GetMapping("/rest-id/{restId}")
     public List<OrderInfoWithCustomer> getOrderInfoRestaurantById(@PathVariable int restId) {
         return orderInfoWithCustomerService.getOrderInfoRestaurantById(restId);
     }
 
+    // search order_content by order-id (顯示每筆訂單資訊的細項order_content)
+    @GetMapping("/rest-id/order/{orderId}")
+    public List<OrderInfoWithCustomer> getOrderContentByOrderId(@PathVariable int orderId) {
+        return orderInfoWithCustomerService.getOrderContentByOrderId(orderId);
+    }
 
     // search by customer's name
     @GetMapping("/name/{keyword}")

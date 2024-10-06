@@ -21,9 +21,9 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                   <th scope="col">訂單日期</th>
                   <th scope="col">顧客名稱</th>
                   <th scope="col">餐廳名稱</th>
-                  <th scope="col">餐點</th>
-                  <th scope="col">單價</th>
-                  <th scope="col">數量</th>
+                  <!-- <th scope="col">餐點</th>
+                  <th scope="col">單價</th> -->
+                  <th scope="col">總數量</th>
                   <th scope="col">總金額</th>
                 </tr>
               </thead>
@@ -33,19 +33,22 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                   <td>{{ order.orderDate }}</td>
                   <td>{{ order.customerName }}</td>
                   <td>{{ order.restaurantName }}</td>
-                  <td>{{ order.menuItem }}</td>
-                  <td>{{ order.menuPrice }}</td>
-                  <td>{{ order.quantity }}</td>
+                  <!-- <td>{{ order.menuItem }}</td>
+                  <td>{{ order.menuPrice }}</td> -->
+                  <td>{{ order.totalQuantity }}</td>
                   <td>{{ order.totalPrice }}</td>
                   <td>
-                    <button class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editModal"
+                    <!-- <button class="btn btn-warning mx-1" data-bs-toggle="modal" data-bs-target="#editModal"
                       @click="onUpdateOrder(order)">
                       Edit
                     </button>
                     <button class="btn btn-danger mx-1" data-bs-toggle="modal" data-bs-target="#deleteModal"
                       @click="onSelectOrder(order)">
                       Delete
-                    </button>
+                    </button> -->
+
+                    <!-- 跳轉到訂單品項頁面 -->
+                    <router-link to="/rest_order_content" class="btn btn-success">詳細內容</router-link>
                   </td>
                 </tr>
               </tbody>
@@ -62,7 +65,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
        </div> -->
 
         <!-- Delete Modal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+         <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
@@ -79,10 +82,10 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
               </div>
             </div>
           </div>
-        </div>
+        </div> 
 
         <!-- Edit Modal -->
-        <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+         <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
@@ -139,10 +142,11 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
               </div>
             </div>
           </div>
-        </div>
+        </div> 
       </div>
     </div>
     <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
+    
   </div>
 
 </template>
@@ -191,7 +195,7 @@ export default {
         restaurantName: "",
         menuItem: "",
         menuPrice: "",
-        quantity: "",
+        totalQuantity: "",
         totalPrice: "",
       },
       newOrder: {
@@ -201,7 +205,7 @@ export default {
         restaurantName: "",
         menuItem: "",
         menuPrice: "",
-        quantity: "",
+        totalQuantity: "",
         totalPrice: "",
       },
       editOrder: {
@@ -211,7 +215,7 @@ export default {
         restaurantName: "",
         menuItem: "",
         menuPrice: "",
-        quantity: "",
+        totalQuantity: "",
         totalPrice: "",
       },
     };
@@ -238,7 +242,7 @@ export default {
     filteredOrders() {
       // 從localStorage抓取username, username為餐廳帳號(restId)
       if (this.localUsername) {
-        return this.menuItems.filter(item =>
+        return this.orders.filter(order =>
           order.restId == (this.localUsername)
         );
       }

@@ -90,8 +90,47 @@ public class OrderInfoWithCustomerService {
     }
 
 
-    // 取得Order-info by Restaurant ID
+    // 取得Order-info by Restaurant ID (顯示每筆訂單, 沒有顯示出訂單下的各品項)
     public List<OrderInfoWithCustomer> getOrderInfoRestaurantById(int restId) {
+        List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立陣列
+
+        String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, count(m.menu_item)AS total_quantity,  SUM(quantity * menu_price) AS total_price "
+            + "FROM Order_info oi "
+            + "JOIN Customer c ON oi.customer_id = c.customer_id  "
+            + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
+            + "JOIN Order_content oc ON oi.order_id = oc.order_id "
+            + "JOIN Menu m ON m.menu_id = oc.menu_id "
+            + "WHERE r.restaurant_id = ? "
+            + "GROUP BY oi.order_id ASC; ";
+
+        try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setInt(1, restId);   // 執行sql語法
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+
+                while (rs.next()) {  // 迴圈持續尋找,直到沒有資料
+                    OrderInfoWithCustomer orderinfowithcustomer = new OrderInfoWithCustomer();
+                    orderinfowithcustomer.setOrderId(rs.getInt("order_id"));
+                    orderinfowithcustomer.setOrderDate(rs.getDate("order_date"));
+                    orderinfowithcustomer.setCustomerName(rs.getString("customer_name"));
+                    orderinfowithcustomer.setRestaurantName(rs.getString("restaurant_name"));
+//                    orderinfowithcustomer.setMenuItem(rs.getString("menu_item"));
+//                    orderinfowithcustomer.setMenuPrice(rs.getInt("menu_price"));
+//                    orderinfowithcustomer.setQuantity(rs.getInt("quantity"));
+                    orderinfowithcustomer.setTotalQuantity(rs.getInt("total_quantity"));
+                    orderinfowithcustomer.setTotalPrice(rs.getInt("total_price"));
+
+                    orderInfoWithCustomerList.add(orderinfowithcustomer);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return orderInfoWithCustomerList;
+    }
+
+    // 取得Order-content by order-id (顯示每筆訂單下的各品項)
+    public List<OrderInfoWithCustomer> getOrderContentByOrderId(int restId) {
         List<OrderInfoWithCustomer> orderInfoWithCustomerList = new ArrayList<>();  // 建立陣列
 
         String sql = "SELECT oi.order_id, oi.order_date, c.customer_name, r.restaurant_name, m.menu_item, m.menu_price, oc.quantity, (quantity * menu_price) AS total_price "
@@ -100,7 +139,8 @@ public class OrderInfoWithCustomerService {
             + "JOIN Restaurant r ON oi.restaurant_id = r.restaurant_id "
             + "JOIN Order_content oc ON oi.order_id = oc.order_id "
             + "JOIN Menu m ON m.menu_id = oc.menu_id "
-            + "AND r.restaurant_id = ? ";
+            + "WHERE r.restaurant_id = ? "
+            + "GROUP BY oi.order_id ASC; ";
 
         try (Connection connection = dbService.connect(); PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setInt(1, restId);   // 執行sql語法
