@@ -49,7 +49,6 @@
                 <tr v-for="restaurant in filteredRestaurants" v-bind:key="restaurant.restId">
                   <td>{{ restaurant.restId }}</td>
                   <td>{{ restaurant.name }}</td>
-                  <td>{{ restaurant.name }}</td>
                   <td>{{ restaurant.tel }}</td>
                   <td>{{ restaurant.zipcode }}</td>
                   <td>{{ restaurant.address }}</td>
