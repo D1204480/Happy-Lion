@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-header container-fluid">
       <div class="card-body d-flex">
-        <h3 class="col-6">餐廳名稱: {{ restName }}</h3>
+        <!-- <h3 class="col-6">餐廳名稱: {{ restName }}</h3> -->
         <h3>餐廳編號: {{ localUsername }}</h3>
       </div>
     </div>
@@ -23,7 +23,8 @@
                   <th scope="col">餐點</th>
                   <th scope="col">單價</th>
                   <th scope="col">數量</th>
-                  <th scope="col">總金額</th>
+                  <th scope="col">合計</th>
+                  <th scope="col"></th>
                 </tr>
               </thead>
               <tbody>
@@ -47,16 +48,31 @@
                     </button>
                   </td>
                 </tr>
+
+                <!-- 新增總金額行 -->
+                <tr>
+                  <th scope="row" colspan="8" class="text-end">總金額</th>
+                  <td>{{ totalAmount }}</td>
+                  <td></td>
+                </tr>
+
               </tbody>
             </table>
+
+            <div class="d-flex justify-content-end me-3">
+              <router-link to="/rest_order" class="btn btn-success">回到訂單</router-link>
+            </div>
+
           </div>
         </div>
       </div>
     </div>
 
+
+
     <!-- Delete Modal -->
-    <!-- <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true"> -->
-    <!-- <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true"> -->
+      <!-- <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="deleteModalLabel">Delete</h5>
@@ -72,11 +88,11 @@
           </div>
         </div>
       </div> -->
-    <!-- </div> -->
+    </div>
 
     <!-- Edit Modal -->
-    <!-- <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"> -->
-    <!-- <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true"> -->
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="editModalLabel">Edit</h5>
@@ -133,7 +149,8 @@
           </div>
         </div>
       </div> -->
-    <!-- </div> -->
+    </div>
+
 
 
     <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
@@ -162,6 +179,7 @@ export default {
     return {
       localUsername: '', // 本地變數，存放 username
       orderId: '', // 用來儲存從 router 傳遞的 orderId
+      totalAmount: 0, // 用來存放總金額
       activeTab: 'orders', // 預設為orders tab
       tabsContent: {
         Order: {
@@ -220,6 +238,14 @@ export default {
         this.getDataByRestId(); // 呼叫 API 獲取資料
       }
     },
+
+    // 當 orders 變化時，計算總金額
+    orders: {
+      handler() {
+        this.calculateTotalAmount();
+      },
+      deep: true, // 監聽深層次的變化
+    },
   },
 
   computed: {
@@ -252,6 +278,12 @@ export default {
       this.activeTab = tab; // 切換當前的 tab
     },
 
+    calculateTotalAmount() {
+      this.totalAmount = this.orders.reduce((total, order) => {
+        return total + order.totalPrice; // 根據你的需求調整這行
+      }, 0);
+    },
+
     async getData() {
       try {
         let response = await fetch("http://localhost:8080/api/order-info-wc");
@@ -272,7 +304,7 @@ export default {
       }
     },
 
-     async getOrderDetails(localUsername, orderId) { 
+    async getOrderDetails(localUsername, orderId) {
       try {
         let response = await fetch(`http://localhost:8080/api/order-info-wc/rest-id/${localUsername}/${orderId}`); // 根據 localUsername 和 orderId 獲取詳細資料
         this.orders = await response.json(); // 假設 API 返回的是該 orderId 的詳細資訊
@@ -379,6 +411,8 @@ export default {
       this.getOrderDetails(this.localUsername, this.orderId);
     }
 
+    // 獲取數據後可以計算總金額
+    this.calculateTotalAmount();
   },
 
   created() {   // 頁面一開始就先執行
