@@ -49,7 +49,7 @@
                   </td>
                 </tr>
 
-                <!-- 新增總金額行 -->
+                <!-- 新增總金額row -->
                 <tr>
                   <th scope="row" colspan="8" class="text-end">總金額</th>
                   <td>{{ totalAmount }}</td>
@@ -180,21 +180,21 @@ export default {
       localUsername: '', // 本地變數，存放 username
       orderId: '', // 用來儲存從 router 傳遞的 orderId
       totalAmount: 0, // 用來存放總金額
-      activeTab: 'orders', // 預設為orders tab
-      tabsContent: {
-        Order: {
-          title: '餐廳名字',
-          text: '這裡是餐廳的基本資料內容。'
-        },
-        menu: {
-          title: '菜單',
-          text: '這裡是餐廳的菜單內容。'
-        },
-        orders: {
-          title: '訂單',
-          text: '這裡是餐廳的訂單內容。'
-        }
-      },
+      // activeTab: 'orders', // 預設為orders tab
+      // tabsContent: {
+      //   Order: {
+      //     title: '餐廳名字',
+      //     text: '這裡是餐廳的基本資料內容。'
+      //   },
+      //   menu: {
+      //     title: '菜單',
+      //     text: '這裡是餐廳的菜單內容。'
+      //   },
+      //   orders: {
+      //     title: '訂單',
+      //     text: '這裡是餐廳的訂單內容。'
+      //   }
+      // },
 
       orders: [],
       keyword: "",
@@ -249,12 +249,12 @@ export default {
   },
 
   computed: {
-    currentTitle() {
-      return this.tabsContent[this.activeTab].title;
-    },
-    currentText() {
-      return this.tabsContent[this.activeTab].text;
-    },
+    // currentTitle() {
+    //   return this.tabsContent[this.activeTab].title;
+    // },
+    // currentText() {
+    //   return this.tabsContent[this.activeTab].text;
+    // },
 
     // 過濾訂單資料 (by order-id)
     filteredOrders() {
