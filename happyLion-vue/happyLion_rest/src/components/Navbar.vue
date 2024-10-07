@@ -38,11 +38,11 @@
         <!-- user_icon Avatar dropdown  -->
         <div class="dropdown mx-1">
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
-            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
             <img src="https://picsum.photos/id/250/200" class="rounded-circle" height="35" alt="user_icon"
               loading="lazy" />
           </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuAvatar">
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
             <li>
               <a class="dropdown-item" href="#">My profile</a>
             </li>
@@ -113,4 +113,10 @@ export default {
   margin-right: 10px;
   /* 調整按鈕與標籤的間距 */
 }
+
+.dropdown-menu {
+  position: absolute;
+  right: 0; /* 將選單對齊到右側，避免超出視窗 */
+}
+
 </style>
