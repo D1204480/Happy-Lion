@@ -23,8 +23,8 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="menu in filteredMenuItems" v-bind:key="menu.id">
-                  <td>{{ menu.id }}</td>
+                <tr v-for="(menu, index) in filteredMenuItems" v-bind:key="menu.id">
+                  <th>{{ index + 1 }}</th>    <!-- 顯示序號，從 1 開始 -->
                   <td>{{ menu.item }}</td>
                   <td>{{ menu.price }}</td>
                   <td>{{ menu.description }}</td>

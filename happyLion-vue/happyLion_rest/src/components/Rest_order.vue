@@ -28,8 +28,8 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="order in orders" v-bind:key="order.orderId">
-                  <td>{{ order.orderId }}</td>
+                <tr v-for="(order, index) in orders" v-bind:key="order.orderId">
+                  <th>{{ index + 1 }}</th>
                   <td>{{ order.orderDate }}</td>
                   <td>{{ order.customerName }}</td>
                   <td>{{ order.restaurantName }}</td>

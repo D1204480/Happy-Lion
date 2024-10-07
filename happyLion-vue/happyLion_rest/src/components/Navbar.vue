@@ -39,7 +39,7 @@
         <div class="dropdown mx-1" v-if="isLoggedIn"> <!-- 這裡的 isLoggedIn 基於 localStorage -->
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
-            <img src="https://picsum.photos/id/250/200" class="rounded-circle" height="35" alt="user_icon"
+            <img src="https://picsum.photos/200" class="rounded-circle" height="35" alt="user_icon"
               loading="lazy" />
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
