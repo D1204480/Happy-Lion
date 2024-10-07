@@ -44,4 +44,20 @@ const router = createRouter({
   ]
 })
 
+// 添加路由守衛
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  
+  // 你可以在這裡檢查登錄狀態並傳遞給你的組件
+  if (isLoggedIn) {
+    // 如果已登入，繼續跳轉
+    next();
+  } else if (to.name !== 'Home') {
+    // 如果沒有登入，且嘗試進入需要登入的頁面，重定向到首頁
+    next({ name: 'Home' });
+  } else {
+    next(); // 對於其他情況，繼續跳轉
+  }
+});
+
 export default router

@@ -36,7 +36,7 @@
         </div>
 
         <!-- user_icon Avatar dropdown  -->
-        <div class="dropdown mx-1" v-if="isLoggedIn">
+        <div class="dropdown mx-1" v-if="isLoggedIn"> <!-- 這裡的 isLoggedIn 基於 localStorage -->
           <a class="dropdown-toggle d-flex align-items-center hidden-arrow" href="#" id="navbarDropdownMenuAvatar"
             role="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-display="static">
             <img src="https://picsum.photos/id/250/200" class="rounded-circle" height="35" alt="user_icon"
@@ -82,14 +82,20 @@ export default {
   data() {
     return {
       searchQuery: '',  // 綁定搜尋欄的輸入值
-      isLoggedIn: false, // 假設初始值是未登入狀態
+      isLoggedIn: false,  // 預設未false
     };
   },
 
   created() {
-    // 當使用者登入後設置 isLoggedIn 為 true
-    if (localStorage.getItem('isLoggedIn')) {
-      this.isLoggedIn = true;
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      this.isLoggedIn = true; // 當已登入，顯示 avatar
+    }
+  },
+
+  watch: {
+    $route(to, from) {
+      // 每次路由發生變化時檢查 localStorage
+      this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     }
   },
 
@@ -104,9 +110,10 @@ export default {
       // 清空 localStorage 的 username
       localStorage.removeItem('username');
       localStorage.removeItem('isLoggedIn');
-      
+      this.isLoggedIn = false; // 隱藏 avatar
+
       // 根據需要，跳轉到登錄頁面或首頁
-      this.$router.push({ name: 'Home' }); 
+      this.$router.push({ name: 'Home' });
     }
   }
 };
@@ -126,7 +133,7 @@ export default {
 
 .dropdown-menu {
   position: absolute;
-  right: 0; /* 將選單對齊到右側，避免超出視窗 */
+  right: 0;
+  /* 將選單對齊到右側，避免超出視窗 */
 }
-
 </style>

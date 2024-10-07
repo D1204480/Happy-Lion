@@ -337,7 +337,6 @@ export default {
   created() {   // 頁面一開始就先執行
     // this.getData();
   }
-
 };
 </script>
 
