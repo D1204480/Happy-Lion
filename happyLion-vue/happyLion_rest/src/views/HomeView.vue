@@ -54,3 +54,6 @@ const handleLogin = () => {
   router.push({ name: 'rest_home', params: { username: username.value, password: password.value } });
 };
 </script>
+
+<style>
+</style>

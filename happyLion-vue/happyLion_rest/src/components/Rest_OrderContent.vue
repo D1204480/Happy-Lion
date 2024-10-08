@@ -155,8 +155,8 @@
 
 
 
-    <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
-    <h2>測試: 來自orderView的表單帳號, {{ orderId }}!</h2>
+    <!-- <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
+    <h2>測試: 來自orderView的表單帳號, {{ orderId }}!</h2> -->
 
   </div>
 </template>

@@ -145,7 +145,7 @@
         </div>
       </div>
     </div>
-    <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
+    <!-- <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2> -->
   </div>
 </template>
 
@@ -186,6 +186,14 @@ export default {
 
       restaurants: [],
       keyword: "",
+      // 修改為物件以存放單一餐廳的資料
+      restaurant: {
+        restId: "",
+        name: "",
+        tel: "",
+        zipcode: "",
+        address: ""
+      },
       selectedRestaurant: {
         restId: "",
         name: "",
@@ -218,20 +226,20 @@ export default {
       return this.tabsContent[this.activeTab].text;
     },
 
-    // 過濾餐廳資料
+    // 過濾餐廳資料，只顯示與 localStorage 'username' 相符的餐廳
     filteredRestaurants() {
+      // 從localStorage抓取username
+      if (this.localUsername) {
+        return this.restaurants.filter(restaurant =>
+          restaurant.restId.toString() === (this.localUsername)
+        );
+      }
+
       // 抓取navbar輸入值
       if (this.searchQuery) {
         return this.restaurants.filter(restaurant =>
           restaurant.restId.toString() === (this.searchQuery) ||
           restaurant.name.toLowerCase() === (this.searchQuery.toLowerCase())
-        );
-      }
-
-      // 從localStorage抓取username
-      if (this.localUsername) {
-        return this.restaurants.filter(restaurant =>
-          restaurant.restId.toString() === (this.localUsername)
         );
       }
 
@@ -249,6 +257,24 @@ export default {
         let response = await fetch("http://localhost:8080/api/restaurant");
         this.restaurants = await response.json();
         console.log(this.restaurants);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+
+    // 根據 localUsername (即 restId) 獲取單一餐廳資料並放入陣列
+    async getDataByRestId() {
+      try {
+        let response = await fetch("http://localhost:8080/api/restaurant/" + this.localUsername);
+        let restaurant = await response.json(); // 獲取單一物件
+
+        // 確保 API 返回的 restaurant 是一個物件，然後放入陣列中
+        if (restaurant && typeof restaurant === 'object') {
+          this.restaurants = [restaurant]; // 將物件放入陣列中
+        } else {
+          this.restaurants = []; // 如果返回的不是物件，重置為空陣列
+        }
+        console.log(this.restaurants); // 檢查 restaurants 的內容
       } catch (error) {
         console.log(error);
       }
@@ -320,7 +346,7 @@ export default {
   },
 
   mounted() {
-    this.getData();
+    // this.getData();
 
     // 如果 props.username 為空，從 localStorage 讀取
     if (!this.username) {
@@ -328,6 +354,12 @@ export default {
     } else {
       this.localUsername = this.username; // 如果 props 傳入了 username，將其存到本地變數
     }
+
+    // 如果 localUsername 不為空，呼叫 getDataByRestId()
+    if (this.localUsername) {
+      this.getDataByRestId();
+    }
+
 
     console.log("Received username:", this.localUsername);
     console.log("Received password:", this.password);

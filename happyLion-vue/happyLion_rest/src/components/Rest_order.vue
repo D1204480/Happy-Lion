@@ -130,7 +130,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
         </div> 
       </div>
     </div>
-    <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2>
+    <!-- <h2>測試: 來自homeView的表單帳號, {{ localUsername }}!</h2> -->
     
   </div>
 
