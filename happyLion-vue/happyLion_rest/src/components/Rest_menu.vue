@@ -15,6 +15,7 @@
             <table class="table table-hover" v-if="activeTab === 'menu'">
               <thead>
                 <tr>
+                  <th scope="col">#</th>
                   <th scope="col">菜單編號</th>
                   <th scope="col">品項</th>
                   <th scope="col">價格</th>
@@ -24,7 +25,8 @@
               </thead>
               <tbody>
                 <tr v-for="(menu, index) in filteredMenuItems" v-bind:key="menu.id">
-                  <th>{{ index + 1 }}</th>    <!-- 顯示序號，從 1 開始 -->
+                  <th>{{ index + 1 }}</th> <!-- 顯示序號，從 1 開始 -->
+                  <td>{{ menu.id }}</td>
                   <td>{{ menu.item }}</td>
                   <td>{{ menu.price }}</td>
                   <td>{{ menu.description }}</td>

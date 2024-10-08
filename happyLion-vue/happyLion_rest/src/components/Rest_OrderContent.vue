@@ -11,11 +11,12 @@
     <div class="card">
       <div class="card-header">
         <div>
-          <div class="card-body">
+          <div class="card-body text-center">
             <table class="table caption-top">
               <caption>訂單詳細內容</caption>
               <thead class="table-warning">
                 <tr>
+                  <th scope="col">#</th>
                   <th scope="col">訂單編號</th>
                   <th scope="col">訂單日期</th>
                   <th scope="col">顧客名稱</th>
@@ -28,8 +29,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="order in orders" v-bind:key="order.orderId">
-                  <th scope="row">{{ order.orderId }}</th>
+                <tr v-for="(order, index) in orders" v-bind:key="order.orderId">
+                  <th>{{ index + 1 }}</th>
+                  <td>{{ order.orderId }}</td>
                   <td>{{ order.orderDate }}</td>
                   <td>{{ order.customerName }}</td>
                   <td>{{ order.restaurantName }}</td>
@@ -59,7 +61,7 @@
               </tbody>
             </table>
 
-            <div class="d-flex justify-content-end me-3">
+            <div class="d-flex justify-content-end me-5">
               <router-link to="/rest_order" class="btn btn-success">回到訂單</router-link>
             </div>
 

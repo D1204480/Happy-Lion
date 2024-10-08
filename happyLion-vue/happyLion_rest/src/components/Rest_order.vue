@@ -17,6 +17,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
             <table class="table table-hover" v-if="activeTab === 'orders'">
               <thead>
                 <tr>
+                  <th scope="col">#</th>
                   <th scope="col">訂單編號</th>
                   <th scope="col">訂單日期</th>
                   <th scope="col">顧客名稱</th>
@@ -30,6 +31,7 @@ import Rest_nav_v2 from '../components/Rest_nav_v2.vue'
               <tbody>
                 <tr v-for="(order, index) in orders" v-bind:key="order.orderId">
                   <th>{{ index + 1 }}</th>
+                  <td>{{ order.orderId }}</td>
                   <td>{{ order.orderDate }}</td>
                   <td>{{ order.customerName }}</td>
                   <td>{{ order.restaurantName }}</td>
