@@ -13,12 +13,12 @@
 
               <form @submit.prevent="handleLogin">
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="text" v-model="username" id="form2Example1" class="form-control" />
+                  <input type="text" v-model="username" id="form2Example1" class="form-control" required />
                   <label class="form-label" for="form2Example1">登入帳號</label>
                 </div>
 
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="password" v-model="password" id="form2Example2" class="form-control" />
+                  <input type="password" v-model="password" id="form2Example2" class="form-control" required />
                   <label class="form-label" for="form2Example2">密碼</label>
                 </div>
 
